@@ -24,7 +24,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+    
+ALLOWED_HOSTS = ["127.0.0.1/32","192.168.0.0/16", '172.16.0.0/16', '10.0.0.0/8' ]
 
 
 # Application definition
@@ -37,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'datalogger',
+    'core',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,7 +63,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'mesures.db'),
-    }
+        'TEST_DEPENDENCIES': [],
+    },
+    'core':{
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':  os.path.join(BASE_DIR, 'core.db'),
+        'TEST_DEPENDENCIES': [],
+        },
+    'datalogger': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':  os.path.join(BASE_DIR, 'datalogger.db'),
+        'TEST_DEPENDENCIES' : ['core'],
+        }
 }
 
 # Internationalization

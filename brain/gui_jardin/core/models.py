@@ -2,12 +2,29 @@ from django.db import models
 from datalogger.models import Plant
 # Create your models here.
 class PlantType(models.Model):
-
+    """
+    This model tries to describe in a first sketch what are the variables we need to account to grow plants of all sorts. 
+    """
+    # Name with index in database to speed up research 
     name            = models.TextField(max_length=50)
     name.db_index   = True
+
+
+
+    # soil humidity 
     mini_soil       = models.IntegerField()
     maxi_soil       = models.IntegerField()
+    
+    
+    
+    
+    # Temperatures section
     mini_temp       = models.IntegerField()
+    mini_temp_night = models.IntegerField()
+    mini_temp_night.null  = True
+    mini_temp_night.blank = True
+    
+
     maxi_temp       = models.IntegerField()
     light_growth    = models.IntegerField()
     light_g_intensity = models.IntegerField()
@@ -19,7 +36,11 @@ class PlantType(models.Model):
     hstress_length  = models.IntegerField()
     hstress_length.null  = True
     hstress_length.blank = True
-
+    
+    additional_requirements = models.BooleanField()
+    additional_table = models.CharField(max_length=50)
+    additional_table.null = True 
+    additional_table.blank = True 
      
     
      
@@ -27,13 +48,13 @@ class PlantType(models.Model):
 
     def has_plant(self):
 
-        try: 
-            if self.name in datalogger.Plant:
+        #try: 
+            if Plant.objects.get(name = self.name):
                 return True
 
             else:
                 return False
 
-        except:
-            print("you no can code, broken language")
+        #except:
+        #    print("you no can code, broken language")
             

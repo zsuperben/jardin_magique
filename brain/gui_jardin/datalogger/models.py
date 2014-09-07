@@ -1,18 +1,26 @@
 from django.db import models
 
+
+class Plant(models.Model):
+    
+    espece   = models.ForeignKey('core.PlantType') 
+    position = models.IntegerField()
+    name     = models.CharField(max_length=50)
+    name.blank = True
+    name.null  = True
 # Create your models here.
 class SoilMoistMesure(models.Model):
    plant      = models.ForeignKey('Plant')
    time       = models.DateTimeField('Date mesured')
    value      = models.IntegerField()
-   sec        = models.IntegerField()
-   plant_type = models.ForeignKey('PlantType')
 
    def is_OK(self):
       if plant_type.mini_soil < value < plant_type.maxi_soil:
          return True
       else:
          return False
+
+
 
 class TempHumMesure(models.Model):
    time = models.DateTimeField('Date mesured')
@@ -41,24 +49,4 @@ class TempHumMesure(models.Model):
       else:
          return False
 
-
-class PlantType(models.Model):
-    
-    name        = models.TextField(max_length=50)
-    mini_soil   = models.IntegerField()
-    maxi_soil   = models.IntegerField()
-    mini_temp   = models.IntegerField()
-    maxi_temp   = models.IntegerField()
-    light_growth= models.IntegerField()
-    light_bloom = models.IntegerField()
-    growth_time = models.IntegerField()
-    
-    def is_ok(self, ):
-        return True
-    
-class Plant(models.Model):
-    
-    espece   = models.ForeignKey(PlantType) 
-    position = models.IntegerField()
-    name     = models.
 

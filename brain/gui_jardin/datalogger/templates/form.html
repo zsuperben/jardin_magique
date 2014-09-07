@@ -1,0 +1,13 @@
+{{ extends base.html }}
+
+<form method="POST" action="/in/mesures/{{mesure_type}}/" >
+{% csrf_token %}
+{{ form }}
+<input type="submit" value="Ok!" />
+</form>
+<div class="footer">
+    <p>Put some bullshit footer <a href="http://www.hacktopie.net" >here</a></p>
+</div>
+</body>
+</html>
+
