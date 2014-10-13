@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta>
+    </meta>
+    <title>{{ welcome_string }}</title>
+    <link type="text/css" rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <h1>{{ welcome_string }}</h1>
+{% for plant in core.models.Plant.objects.all %}
+        <div id="plant{{ plant.position }}" class=plant_div>
+            {% if plant.is_ok %}
+            <img src="/static/plantok.jpg" />i
+            <p class=pok>Your plant {{ plant.name }} is feeling good. </p>
+            {% else %}
+            <img src="/static/plantnotok.jpg" />
+            <p class=pnotok>Your plant {{ plant.name  }} is not feeling good. </p>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class=error101 id=1><p><b>You FAIL</b></p></div>
+{% endfor %}
+</body>
+</html>
