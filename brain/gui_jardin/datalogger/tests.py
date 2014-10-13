@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core import serializers
 from datalogger.models import *
 from core.tests import *
 from django.utils import timezone 
@@ -12,50 +13,29 @@ class CreateObjects(TestCase):
     Tries to create object in the database from models. 
     """
     def setUp(self):
-        PlantType.objects.create(
-            name="orchid", 
-            mini_soil=1, 
-            maxi_soil=50, 
-            mini_temp=16,
-            maxi_temp=40,
-            light_growth=43200,
-            light_g_intensity=512,
-            light_bloom=43200,
-            light_b_intensity=384,
-            growth_time=15552000,
-            harvest_stress=False,
-            additional_requirements=True,
 
+        b = PlantType.objects.get(name = 'orchid')
+        Plant.objects.create(
+            espece = b,
+            name = 'berte',
             )
-        PlantType.objects.create(
-            name="tomate", 
-            mini_soil=50, 
-            maxi_soil=400, 
-            mini_temp=12,
-            maxi_temp=32,
-            light_growth=16*3600,
-            light_g_intensity=768,
-            light_bloom=12*3600,
-            light_b_intensity=768,
-            growth_time=24*3600*7*5,
-            harvest_stress=True,
-            hstress_length=24*3600*7,
-            additional_requirements=False,
+        Plant.objects.create(
+            espece = PlantType.objects.get(name="tomate"),
+            name = 'toto',
             )
+
     def test_create_Plants_1(self):
 
-            b = PlantType.objects.get(name = 'orchid')
-            Plant.objects.create(
-                espece = b,
-                position = 1, 
-                name = 'berte',
-                )
+        b = PlantType.objects.get(name = 'orchid')
+        Plant.objects.create(
+            espece = b,
+            name = 'berte',
+            )
 
 
     def test_2(self):            
             Plant.objects.create(
                 espece = PlantType.objects.get(name = 'tomate'),
-                position = 2, 
                 )
 
         
@@ -63,15 +43,27 @@ class CreateObjects(TestCase):
         SoilMoistMesure.objects.create(
             time = timezone.now(),
             value = 1024,
-            plant = Plant(0),
+            plant = Plant.objects.get(name = 'berte'),
             )
         SoilMoistMesure.objects.create(
             time = timezone.now(),
-            plant = Plant(1),
+            plant = Plant.objects.get(name = 'toto'),
             value = 512,
             )
 
 
     def test_method_get(self):
-        c = PlantType.objects.get(name = 'orchid')
+        c = PlantType.objects.get(name__exact='orchid')
         self.assertEqual(c.has_plant(), True)
+    def test_isok(self):
+        f = SoilMoistMesure.objects.create(
+            time = timezone.now(),
+            value = 1024,
+            plant = Plant.objects.get(name = 'toto'),
+            )
+
+        self.assertEqual(f.is_OK(), False)
+
+    def test_print_serialized_objects(self):
+        print(serializers.serialize('xml', PlantType.objects.all()))
+        print("\n %s" % serializers.serialize('xml', Plant.objects.all()))

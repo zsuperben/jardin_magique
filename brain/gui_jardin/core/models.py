@@ -6,8 +6,9 @@ class PlantType(models.Model):
     This model tries to describe in a first sketch what are the variables we need to account to grow plants of all sorts. 
     """
     # Name with index in database to speed up research 
-    name            = models.TextField(max_length=50)
-    name.db_index   = True
+    name            = models.CharField(max_length=50)
+    name.primary_key     = True
+
 
 
 
@@ -43,13 +44,15 @@ class PlantType(models.Model):
     additional_table.blank = True 
      
     
-     
+    def __unicode__(self):
+        return unicode(self.name)
 
 
     def has_plant(self):
 
         #try: 
-            if Plant.objects.get(name = self.name):
+            q = Plant.objects.filter(espece = self)
+            if len(q) > 0:
                 return True
 
             else:

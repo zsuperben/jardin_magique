@@ -2,20 +2,30 @@ from django.db import models
 
 
 class Plant(models.Model):
-    
+        
     espece   = models.ForeignKey('core.PlantType') 
-    position = models.IntegerField()
+
     name     = models.CharField(max_length=50)
-    name.blank = True
-    name.null  = True
-# Create your models here.
+    def __unicode__(self):
+        retval = "position : %d, espece : %s" % (int(self.id), str(self.espece.name))
+        if self.name is not None:
+            retval = retval + ", name : %s" % self.name
+        return unicode(retval)
+
+    def __str__(self):
+        return self.__unicode__()
+
 class SoilMoistMesure(models.Model):
    plant      = models.ForeignKey('Plant')
    time       = models.DateTimeField('Date mesured')
    value      = models.IntegerField()
 
    def is_OK(self):
-      if plant_type.mini_soil < value < plant_type.maxi_soil:
+      p = self.plant
+      print(p) 
+      e = p.espece
+      print(e)
+      if e.mini_soil < self.value < e.maxi_soil:
          return True
       else:
          return False
@@ -26,6 +36,7 @@ class TempHumMesure(models.Model):
    time = models.DateTimeField('Date mesured')
    temp = models.IntegerField()
    humi = models.IntegerField()
+   plant = models.ForeignKey('Plant')
 
 
 

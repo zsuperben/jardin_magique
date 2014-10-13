@@ -61,18 +61,24 @@ WSGI_APPLICATION = 'gui_jardin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'mesures.db'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'jardin',
+        'HOST': 'localhost',
+        'USER': 'django',
         'TEST_DEPENDENCIES': [],
     },
     'core':{
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':  os.path.join(BASE_DIR, 'core.db'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':  'core',
+        'HOST': 'localhost',
+        'USER': 'django',
         'TEST_DEPENDENCIES': [],
         },
     'datalogger': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':  os.path.join(BASE_DIR, 'datalogger.db'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':  'data',
+        'HOST': 'localhost',
+        'USER': 'django',
         'TEST_DEPENDENCIES' : ['core'],
         }
 }
