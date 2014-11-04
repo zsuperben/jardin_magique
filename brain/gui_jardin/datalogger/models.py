@@ -1,19 +1,20 @@
 from django.db import models
+from core.models import PlantType
 
 
 class Plant(models.Model):
         
-    espece   = models.ForeignKey('core.PlantType') 
+    espece   = models.ForeignKey(PlantType) 
 
     name     = models.CharField(max_length=50)
     def __unicode__(self):
-        retval = "position : %d, espece : %s" % (int(self.id), str(self.espece.name))
+        retval = "position : %s, espece : %s" % (str(self.id), str(self.espece.name))
         if self.name is not None:
             retval = retval + ", name : %s" % self.name
         return unicode(retval)
 
     def __str__(self):
-        return self.__unicode__()
+        return str(self.__unicode__())
 
 class SoilMoistMesure(models.Model):
    plant      = models.ForeignKey('Plant')

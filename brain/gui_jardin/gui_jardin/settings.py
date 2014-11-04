@@ -68,18 +68,18 @@ DATABASES = {
         'TEST_DEPENDENCIES': [],
     },
     'core':{
+        'TEST_DEPENDENCIES': [],
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'core',
+        'NAME': 'jardin',
         'HOST': 'localhost',
         'USER': 'django',
-        'TEST_DEPENDENCIES': [],
         },
     'datalogger': {
+        'TEST_DEPENDENCIES' : ['core'],
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'data',
+        'NAME': 'jardin',
         'HOST': 'localhost',
         'USER': 'django',
-        'TEST_DEPENDENCIES' : ['core'],
         }
 }
 

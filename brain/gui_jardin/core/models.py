@@ -1,5 +1,4 @@
 from django.db import models
-from datalogger.models import Plant
 # Create your models here.
 class PlantType(models.Model):
     """
@@ -7,7 +6,6 @@ class PlantType(models.Model):
     """
     # Name with index in database to speed up research 
     name            = models.CharField(max_length=50)
-    name.primary_key     = True
 
 
 
@@ -49,8 +47,8 @@ class PlantType(models.Model):
 
 
     def has_plant(self):
-
-        #try: 
+        from datalogger.models import Plant
+        try: 
             q = Plant.objects.filter(espece = self)
             if len(q) > 0:
                 return True
@@ -58,6 +56,6 @@ class PlantType(models.Model):
             else:
                 return False
 
-        #except:
-        #    print("you no can code, broken language")
+        except:
+            print("you no can code, broken language")
             

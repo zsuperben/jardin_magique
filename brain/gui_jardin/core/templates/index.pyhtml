@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>{{ welcome_string }}</h1>
-{% for plant in core.models.Plant.objects.all %}
+{% for plant in  list %}
         <div id="plant{{ plant.position }}" class=plant_div>
             {% if plant.is_ok %}
             <img src="/static/plantok.jpg" />i

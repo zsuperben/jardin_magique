@@ -15,6 +15,11 @@ class MySimpleTest(TestCase):
         """
         Tries to create objects in the database. 
         """
+###     This object creation has moved to "fixtures". 
+###     It is evaluated at the same time more or less, and does the same job. 
+###     But this data  is also used in production, so to be able to reuse it it 
+###     has moved to fixtures.
+
 #        PlantType.objects.create(
 #            name="orchid", 
 #            mini_soil=1, 
