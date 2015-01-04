@@ -1,24 +1,10 @@
 from django.db import models
-from core.models import PlantType
+from core.models import  Plant
 
-
-class Plant(models.Model):
-        
-    espece   = models.ForeignKey(PlantType) 
-
-    name     = models.CharField(max_length=50)
-    def __unicode__(self):
-        retval = "position : %s, espece : %s" % (str(self.id), str(self.espece.name))
-        if self.name is not None:
-            retval = retval + ", name : %s" % self.name
-        return unicode(retval)
-
-    def __str__(self):
-        return str(self.__unicode__())
 
 class SoilMoistMesure(models.Model):
-   plant      = models.ForeignKey('Plant')
-   time       = models.DateTimeField('Date mesured')
+   plant      = models.ForeignKey(Plant)
+   time       = models.DateTimeField('Date and time of the mesure')
    value      = models.IntegerField()
 
    def is_OK(self):
@@ -34,10 +20,10 @@ class SoilMoistMesure(models.Model):
 
 
 class TempHumMesure(models.Model):
-   time = models.DateTimeField('Date mesured')
+   time = models.DateTimeField('Date and time of the mesure')
    temp = models.IntegerField()
    humi = models.IntegerField()
-   plant = models.ForeignKey('Plant')
+   plant = models.ForeignKey(Plant)
 
 
 

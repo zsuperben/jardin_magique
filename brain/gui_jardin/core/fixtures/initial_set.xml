@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0"><object pk="1" model="datalogger.plant"><field to="core.planttype" name="espece" rel="ManyToOneRel">1</field><field type="CharField" name="name">berte</field></object><object pk="2" model="datalogger.plant"><field to="core.planttype" name="espece" rel="ManyToOneRel">2</field><field type="CharField" name="name">toto</field></object></django-objects>

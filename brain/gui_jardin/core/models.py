@@ -1,5 +1,7 @@
 from django.db import models
 # Create your models here.
+
+
 class PlantType(models.Model):
     """
     This model tries to describe in a first sketch what are the variables we need to account to grow plants of all sorts. 
@@ -58,4 +60,20 @@ class PlantType(models.Model):
 
         except:
             print("you no can code, broken language")
-            
+ 
+ 
+class Plant(models.Model):
+        
+    espece   = models.ForeignKey(PlantType) 
+    position = models.CharField(max_length=10)
+    name     = models.CharField(max_length=50)
+    def __unicode__(self):
+        retval = "position : %s, espece : %s" % (str(self.id), str(self.espece.name))
+        if self.name is not None:
+            retval = retval + ", name : %s" % self.name
+        return unicode(retval)
+
+    def __str__(self):
+        return str(self.__unicode__())
+
+           

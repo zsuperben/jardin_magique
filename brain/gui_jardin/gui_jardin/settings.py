@@ -39,8 +39,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'datalogger',
     'core',
+    'celery',
 
 )
+
+BROKER_HOST = "127.0.0.1"
+BROKER_PORT = 5672
+BROKER_VHOST = "/"
+BROKER_USER = "guest"
+BROKER_PASSWORD = "guest"
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

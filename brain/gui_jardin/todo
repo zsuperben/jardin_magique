@@ -1,0 +1,31 @@
+Django et python
+================
+- ajouter les formulaires de mesures
+- ajouter le CSS 
+- ajouter les images
+- rechercher la facon de faire un démon
+   -> propre en python, j'sai pas encore
+   -> au pire curl et crontab
+
+étoffer la page d'acceuil 
+ajouter des plantes
+
+Arduino
+=======
+
+tester un arduino pour remplir les mesures
+faire marcher la sonde de temperature
+faire marcher une photo resistance
+    -> Commander des photorésistances
+    -> Calibrer les résistances
+    -> faire des montages complets et autonomes
+
+détecter le crash d'un arduino et le rebooter
+    -> GPIO sur la cubieboard
+    -> relais ou trasistors pour l'alim
+
+
+
+
+
+
