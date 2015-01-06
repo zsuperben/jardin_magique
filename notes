@@ -1,0 +1,19 @@
+DHCP sur rasberry pi 
+datalogger sur RPi
+Care for double  MAC from arduino sketches. 
+
+Add a script to flash arduinos ? Add a random fuction in the sketches ? 
+
+
+Ajouter une vue pour régler le DHCP. Ajouter une vue pour flasher l'arduino ?
+
+    -> Nombre de directive restreint : 
+        nom de domaine facultatif
+        serveur de nom optionnel 
+        lease time le plus long possible voir permanent 
+        logging dans les log de l'application (WTF faire des log pour l'application ! ) 
+        il faut : - Une déclaration de subnet (statique) 
+                  - Ajout d'une directive host avec une ip,
+                  - pour récupérer la MAC des arduino le plus simple serait quand meme de la joindre dans une requetes HTTP... Du coup on repart sur une page de configuration. 
+                  - un model pour savoir quel arduino est déjà configuré ou pas ? 
+                  - 

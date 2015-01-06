@@ -67,6 +67,7 @@ class Plant(models.Model):
     espece   = models.ForeignKey(PlantType) 
     position = models.CharField(max_length=10)
     name     = models.CharField(max_length=50)
+    sensor   = models.ForeignKey(KnownSensor)
     def __unicode__(self):
         retval = "position : %s, espece : %s" % (str(self.id), str(self.espece.name))
         if self.name is not None:
