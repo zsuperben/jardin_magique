@@ -85,7 +85,10 @@ void loop() {
   lastConnected = client.connected();
 }
 
+
+
 // this method makes a HTTP connection to the server:
+
 void httpRequest() {
   // if there's a successful connection:
   if (client.connect(server, 80)) {
