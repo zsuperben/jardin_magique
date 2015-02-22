@@ -1,0 +1,46 @@
+
+#############################################
+####  DHCP daemon configuration file     ####
+####                                     ####
+####  DO NOT EDIT BY HAND                ####
+####  YOUR CHANGES WOULD BE OVERWRITTEN  ####
+#############################################
+
+#### This file is part of the jardin-magique 
+#### project. It is used to restore the same
+#### ip configuration over time for the 
+#### sensors. It is generated out of a django
+#### template, that you will find in the dhcp
+#### app in the django part of the project.
+
+
+
+option domain-name {{ dns }};
+option domain-name-servers {{ rpi.ip }};
+
+option default-lease-time {{ default_lease_time }};
+option max-lease-time {{ max_lease_time }};
+log-facility {{ logfacility }};
+
+{% if authoritative %}
+authoritative;
+{% endif %}
+{% for network in networks_list %}
+
+subnet {{ network.netaddr }} netmask {{ network.netmask }}  {
+{% if network.startip and network.endip %}    range {{ network.startip }} {{ network.endip }}
+{% if network.gateway %}    router {{ network.gateway }}{% endif %}
+{% if network.netboot %}    next-server {{ network.netboot.server }}
+    filename {{ network.netboot.filename }} {% endif %}
+{% endif %}
+}
+
+{% endfor %}
+
+{% for sensor in sensors_list %}
+host {{ sensor.nom }} { 
+    hardware ethernet {{ sensor.ethernet}};
+    fixed-address {{ sensor.ip }};
+    }
+
+{% endfor %}

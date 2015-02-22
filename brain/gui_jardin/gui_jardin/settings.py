@@ -23,6 +23,7 @@ SECRET_KEY = '#11ripgynoinwo46*ao3t5^g@1r1vgw7(xyvf2axlf9!1%sp9u'
 DEBUG = True
 
 TEMPLATE_DEBUG = True
+TEMPLATE_STRING_IF_INVALID = "#MISSING OR INVALID DATA#"
 
     
 ALLOWED_HOSTS = ["127.0.0.1/32","192.168.0.0/16", '172.16.0.0/16', '10.0.0.0/8' ]
@@ -40,6 +41,7 @@ INSTALLED_APPS = (
     'datalogger',
     'core',
     'celery',
+    'dhcp',
 
 )
 
