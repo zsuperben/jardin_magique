@@ -1,5 +1,10 @@
 # Create your views here.
 from django.template import Template, Context
+from django.views.generic import CreateView
+
+"""
+Example de contexte pour remplir le fichier de configuration du daemon dhcp 
+
 c = [
     {'networks_list': 
         [
@@ -40,5 +45,15 @@ c = [
      
      }]
 
+"""
+class CreateConfigView(CreateView):
+
+    def get(self, request, *args, **kwargs):
+        # Do stuff to generate empty view of the forms
 
 
+    def post(self, request, *args, **kwargs):
+        # Do stuff to validate form data.
+
+    def form_valid(self, form, *arg, **kwargs):
+        # Do stuff to save object 

@@ -90,5 +90,6 @@ class Networks(models.Model):
     gateway            = models.IPAddressField()
     gateway.blank      = True
     gateway.null       = True
-
+    
+    config             = models.ForeignKey(Config)
 
