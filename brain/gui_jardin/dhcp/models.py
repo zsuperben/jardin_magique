@@ -55,18 +55,21 @@ class Sensor(models.Model):
 
 class Config(models.Model):
     
+    name               = models.CharField(max_length=40)
     logfacility        = models.CharField(max_length=30)
     domain             = models.CharField(max_length=100)
     default_lease_time = models.IntegerField()
     max_lease_time     = models.IntegerField()
+    
 
 
 class Rpi(models.Model):
-
+    
     ip                 = models.IPAddressField()
     name               = models.CharField(max_length=50)
 
 class Netboot(models.Model):
+    
     server             = models.IPAddressField()
     filename           = models.CharField(max_length=50)
 
@@ -83,7 +86,7 @@ class Networks(models.Model):
     endip.null         = True
     endip.blank        = True
 
-    netboot            = models.OneToOneField(Netboot)
+    netboot            = models.ForeignKey(Netboot)
     netboot.blank      = True
     netboot.null       = True
 
