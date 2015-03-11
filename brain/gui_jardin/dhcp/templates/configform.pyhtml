@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' type='text/css' href='../static/style.css' />
+    <script type='text/javascript' ></script>
+    <title>{{ title }}</title>
+</head>
+
+
+<body>
+    <h1>Add new configuration rules</h1>
+    <form>
+     {% csrf_token %}
+        <div>
+        {{ form.as_p }}
+        </div>
+        <fieldset>
+        
+        </fieldset>
+
+        <input type=submit value="Ok!" class="ok_button" />
+     </form>
+
+</body>
+</html>
