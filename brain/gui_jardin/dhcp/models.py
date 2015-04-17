@@ -60,7 +60,8 @@ class Config(models.Model):
     domain             = models.CharField(max_length=100)
     default_lease_time = models.IntegerField()
     max_lease_time     = models.IntegerField()
-    
+    running            = models.BooleanField()
+
 
 
 class Rpi(models.Model):

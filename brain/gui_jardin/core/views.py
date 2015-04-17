@@ -4,9 +4,16 @@ from datalogger.models import Plant
 
 
 def index(request):
-    return render(request, "index.pyhtml", {"welcome_string":"Bonjour", "list": Plant.objects.all() })
+
+    if  Plant.objects.all() == []:
+        return render(request, "index_no_plants.pyhtml", { "welcome_string":"Hey!", "sorry_string":"" })
+
+    else:
+        return render(request, "index.pyhtml", {"welcome_string":"Bonjour", })
 
 
 
 
-    
+def ViewAll(request):
+
+    return  
