@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'django',
         },
     'datalogger': {
-        'TEST_DEPENDENCIES' : ['core'],
+        'TEST_DEPENDENCIES' : [],
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jardin',
         'HOST': 'localhost',
