@@ -27,7 +27,7 @@ def parse_request(request):
             ret_dict['soil'] = int(sm.groups()[0])
             print(ret_dict)
     def set_zone(request):
-        zm = re.match(r'.*zone=(\d).*', request)
+        zm = re.match(r'.*zone=(\d*).*', request)
         if zm:
             ret_dict['zone'] = int(zm.groups()[0])
             print(ret_dict)
