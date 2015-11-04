@@ -3,64 +3,15 @@ import MySQLdb.cursors
 import getopt
 import sys
 import socket
-import re
-import datetime
-
-import netaddr
 
 from db import get_table_for_zone, set_table_for_zone, insert_dict_into_db
-from config import load_config
+from config import load_config,is_allowed
+from rekpars import parse_request
 
 
 
-def parse_request(request):
-    ret_dict = {}
-    print(request)
-    request = str(request)
-    def set_plant(request):
-        pm = re.match(r'.*plant=(\d*).*', request)
-        if pm:
-            ret_dict['plant'] = int(pm.groups()[0])
-            print "Got match pm"
-            print ret_dict
-
-    def set_soil(request):
-        sm = re.match(r'.*soil=(\d*).*', request)
-        if sm:
-            print "Got match sm"
-            ret_dict['soil'] = int(sm.groups()[0])
-            print(ret_dict)
-    def set_zone(request):
-        zm = re.match(r'.*zone=(\d*).*', request)
-        if zm:
-            ret_dict['zone'] = int(zm.groups()[0])
-            print(ret_dict)
-
-    set_plant(request)
-    set_soil(request)
-    set_zone(request)
 
 
-    if 'plant' and 'soil' and 'zone' in ret_dict.keys():
-        #Adds timestamp
-        ret_dict['time'] = "'" + datetime.datetime.now().isoformat(sep=' ') +"'"
-        return ret_dict
-    else:
-        return None
-
-
-def is_allowed(client, conf):
-    allowed = False
-    for host in conf['sensors']['host_list']:
-        if type(host) is netaddr.ip.IPNetwork:
-            if host.__contains__(client):
-                allowed = True
-
-        else:
-            if host == 'localhost' and client == 'localhost':
-                allowed = True
-
-    return allowed
 
 if __name__ == "__main__":
 

@@ -42,3 +42,16 @@ def load_config(file='logger.conf'):
 
     print(d)
     return d
+
+def is_allowed(client, conf):
+    allowed = False
+    for host in conf['sensors']['host_list']:
+        if type(host) is netaddr.ip.IPNetwork:
+            if host.__contains__(client):
+                allowed = True
+
+        else:
+            if host == 'localhost' and client == 'localhost':
+                allowed = True
+
+    return allowed
