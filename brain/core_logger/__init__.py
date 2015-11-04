@@ -1,13 +1,49 @@
 import MySQLdb
 import MySQLdb.cursors
-
+import getopt
+import sys
 import socket
 import re
 import datetime
+import ConfigParser
+import os
+import netaddr
 
+def load_config(file='logger.conf'):
+    if not os.path.isfile(file):
+        raise ValueError("Config file not found ")
+    config = ConfigParser.ConfigParser()
+    config.read(file)
+    d = {}
+    for section in config.sections():
+        d[section] = {}
+        for i in config.items(section):
+            d[section][i[0]] = i[1]
 
+    try:
+        if d['sensors']['host_list'][0] is '[':
+            d['sensors']['host_list'] = eval(d['sensors']['host_list'])
+        else:
+            d['sensors']['host_list'] = [ d['sensors']['host_list'] ]
 
+        d['logger']['port'] = int(d['logger']['port'])
+    except KeyError:
+        return None
 
+    #building a list of valid ips
+    temp_list = []
+    for host in d['sensors']['host_list']:
+
+        try:
+            host = netaddr.IPNetwork(host)
+            temp_list.append(host)
+        except:
+            print("not a valid ip!")
+
+    d['sensors']['host_list'] = temp_list
+
+    print(d)
+    return d
 
 def parse_request(request):
     ret_dict = {}
@@ -104,24 +140,66 @@ def insert_dict_into_db(connection, table, data):
     r = mycur.execute(gogetit)
     connection.commit()
 
+def is_allowed(client, conf):
+    allowed = False
+    for host in conf['sensors']['host_list']:
+        if type(host) is netaddr.ip.IPNetwork:
+            if host.__contains__(client):
+                allowed = True
 
+        else:
+            if host == 'localhost' and client == 'localhost':
+                allowed = True
 
-
-
-
-
+    return allowed
 
 if __name__ == "__main__":
-    c= MySQLdb.connect('localhost',
-                       'root',
-                           '',
-                       'jardin')
-    cur = c.cursor()
-    s = socket.socket()
-    s.bind(('0.0.0.0', 8080))
-    s.listen(10)
-    host_list = ['localhost', '127.0.0.1']
 
+    opt, trash = getopt.getopt(args=sys.argv[1:],
+                               shortopts="p:c:",
+                               longopts=['password', 'config'])
+    dbpassword = ''
+    configfile = ''
+    for o,a in opt:
+        if o in ("-p", "--password"):
+            dbpassword = a
+        elif o in ("-c", "--config"):
+            configfile = a
+        else:
+            print("either no password supplied or wrong options")
+            sys.exit(5)
+
+    try:
+        Conf = load_config(configfile)
+    except NameError:
+        Conf = load_config()
+
+    if not Conf:
+        sys.stderr.write("Invalid config file.")
+        sys.exit(5)
+
+    try:
+        if not 'db' or not 'logger' or not 'sensors' in Conf.keys():
+            raise Exception("Config file is incomplete or corrupted")
+
+
+        c= MySQLdb.connect(Conf['db']['host'],
+                           Conf['db']['user'],
+                           Conf['db']['password'],
+                           Conf['db']['db'])
+
+        cur = c.cursor()
+        s = socket.socket()
+        s.bind((Conf['logger']['address'], Conf['logger']['port']))
+        s.listen(10)
+
+
+        #Building host list from what is in the config file
+
+
+    except AttributeError as e:
+        sys.stderr.write("Incomplete Configuration file ! %s" % str(e))
+        raise e
 
 
     while True:
@@ -130,7 +208,8 @@ if __name__ == "__main__":
             client.close()
             host, port = address
             print("Got : " + my_request)
-            if host in host_list:
+
+            if is_allowed(host, Conf):
                 print("OK parsing request")
                 tutu = parse_request(my_request)
             else:
