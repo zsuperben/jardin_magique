@@ -39,7 +39,7 @@ if __name__ == "__main__":
         sys.stderr.write("Invalid config file.")
         sys.exit(5)
 
-
+    #Overrides config file value if command line option is passed.
     if dbpassword is not '':
         Conf['db']['password'] = dbpassword
 
