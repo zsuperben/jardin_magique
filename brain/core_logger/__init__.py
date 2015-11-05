@@ -52,7 +52,6 @@ if __name__ == "__main__":
                               #chroot_directory=Conf['logger']['chroot_dir'],
                               uid=int(Conf['logger']['uid']),
                               gid=int(Conf['logger']['gid']),
-
                               ):
 
         try:
