@@ -109,6 +109,10 @@ if __name__ == "__main__":
                             print("NULL REQUEST!")
                     except NameError:
                         print("No data!")
+                    except socket.error:
+                        print("Got socket error !")
+                        pass
+
             except KeyboardInterrupt:
                 sys.stderr.write('Closing connections...\n')
                 sys.stderr.write('Closing listener...\n')
