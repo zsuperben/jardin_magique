@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import MySQLdb
 import MySQLdb.cursors
 import getopt
@@ -30,10 +32,10 @@ if __name__ == "__main__":
             print("either no password supplied or wrong options")
             sys.exit(5)
 
-    try:
+    if configfile is not '':
         Conf = load_config(configfile)
-    except NameError:
-        Conf = load_config()
+    else:
+        Conf = load_config("/etc/jardin/logger.conf")
 
     if not Conf:
         sys.stderr.write("Invalid config file.")
@@ -43,17 +45,9 @@ if __name__ == "__main__":
     if dbpassword is not '':
         Conf['db']['password'] = dbpassword
 
+    lockfile = daemon.pidfile.PIDLockFile(Conf['logger']['pidfile'])
 
-
-    with daemon.DaemonContext( pidfile=daemon.pidfile.PIDLockFile(Conf['logger']['pidfile']),
-                              stderr=open(Conf['logger']['logfile'],'a'),
-                              stdout=open(Conf['logger']['logfile'], 'a'),
-                              prevent_core=False,
-                              #chroot_directory=Conf['logger']['chroot_dir'],
-                              uid=int(Conf['logger']['uid']),
-                              gid=int(Conf['logger']['gid']),
-                              ):
-
+    def mainlogic():
         try:
             if not 'db' or not 'logger' or not 'sensors' in Conf.keys():
                 raise Exception("Config file is incomplete or corrupted")
@@ -121,3 +115,14 @@ if __name__ == "__main__":
                 c.close()
                 sys.stderr.write('Exiting...\n')
                 sys.exit(0)
+
+    context =  daemon.DaemonContext(pidfile=lockfile,
+                              stderr=open(Conf['logger']['logfile'],'a'),
+                              stdout=open(Conf['logger']['logfile'], 'a'),
+                              prevent_core=False,
+                              #chroot_directory=Conf['logger']['chroot_dir'],
+                              #uid=int(Conf['logger']['uid']),
+                              #gid=int(Conf['logger']['gid']),
+                              )
+    with context:
+        mainlogic()
