@@ -4,7 +4,7 @@ import getopt
 import sys
 import socket
 import daemon
-
+import daemon.pidfile
 
 
 from db import get_table_for_zone, set_table_for_zone, insert_dict_into_db
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
 
 
-    with daemon.DaemonContext( pidfile=open(Conf['logger']['pidfile']),
+    with daemon.DaemonContext( pidfile=daemon.pidfile.PIDLockFile(Conf['logger']['pidfile']),
                               stderr=open(Conf['logger']['logfile'],'a'),
                               stdout=open(Conf['logger']['logfile'], 'a'),
                               prevent_core=False,
