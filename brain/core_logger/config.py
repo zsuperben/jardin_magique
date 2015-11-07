@@ -15,10 +15,11 @@ def load_config(file='logger.conf'):
             d[section][i[0]] = i[1]
 
     try:
-        if d['sensors']['host_list'][0] is '[':
-            d['sensors']['host_list'] = eval(d['sensors']['host_list'])
+        if d['sensors']['host_list']:
+            print d['sensors']['host_list'].split(' ')
+            d['sensors']['host_list'] = d['sensors']['host_list'].split(' ')
         else:
-            d['sensors']['host_list'] = [ d['sensors']['host_list'] ]
+            raise KeyError("Incomplete config file !")
 
         d['logger']['port'] = int(d['logger']['port'])
 
