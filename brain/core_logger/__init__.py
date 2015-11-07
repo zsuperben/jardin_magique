@@ -85,22 +85,23 @@ if __name__ == "__main__":
                         print("Not in host list")
                     try:
                         print("tries to insert : %s" % tutu)
-                        if tutu:
-                            if tutu['zone']:
-                                zone = 'mesure_tbl_' + str(tutu.pop('zone'))
-                                print('popped zone')
+                        for t in tutu:
+                            if t:
+                                if t['zone']:
+                                    zone = 'mesure_tbl_' + str(t.pop('zone'))
+                                    print('popped zone')
+                                else:
+                                    print("NULL REQUEST : NO ZONE !")
+                                    continue
+                                if get_table_for_zone(c, zone):
+                                    print('here')
+                                    insert_dict_into_db(c, zone, t)
+                                else:
+                                    print('else')
+                                    set_table_for_zone(c, zone)
+                                    insert_dict_into_db(c, zone, t)
                             else:
-                                print("NULL REQUEST : NO ZONE !")
-                                continue
-                            if get_table_for_zone(c, zone):
-                                print('here')
-                                insert_dict_into_db(c, zone, tutu)
-                            else:
-                                print('else')
-                                set_table_for_zone(c, zone)
-                                insert_dict_into_db(c, zone, tutu)
-                        else:
-                            print("NULL REQUEST!")
+                                print("NULL REQUEST!")
                     except NameError:
                         print("No data!")
                     except socket.error:

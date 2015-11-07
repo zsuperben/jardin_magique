@@ -3,36 +3,37 @@ import re
 import datetime
 
 def parse_request(request):
-    ret_dict = {}
+
     print(request)
     request = str(request)
-    def set_plant(request):
+    lines = request.split('\n')
+
+    def get_plant(request):
         pm = re.match(r'.*plant=(\d*).*', request)
         if pm:
-            ret_dict['plant'] = int(pm.groups()[0])
+            return int(pm.groups()[0])
             print "Got match pm"
             print ret_dict
 
-    def set_soil(request):
+    def get_soil(request):
         sm = re.match(r'.*soil=(\d*).*', request)
         if sm:
             print "Got match sm"
-            ret_dict['soil'] = int(sm.groups()[0])
+            return int(sm.groups()[0])
             print(ret_dict)
-    def set_zone(request):
+    def get_zone(request):
         zm = re.match(r'.*zone=(\d*).*', request)
         if zm:
-            ret_dict['zone'] = int(zm.groups()[0])
+            return int(zm.groups()[0])
             print(ret_dict)
+    retlist = []
+    for line in lines:
+        d = {}
+        d['zone'], d['plant'], d['soil'], d['time'] = get_zone(request), get_plant(request), get_soil(request), "'" + datetime.datetime.now().isoformat(sep=' ') +"'"
+        if d['zone'] and d['plant'] and d['soil'] and d['time']:
+            retlist.append(d)
 
-    set_plant(request)
-    set_soil(request)
-    set_zone(request)
-
-
-    if 'plant' and 'soil' and 'zone' in ret_dict.keys():
-        #Adds timestamp
-        ret_dict['time'] = "'" + datetime.datetime.now().isoformat(sep=' ') +"'"
-        return ret_dict
+    if len(retlist) > 0:
+        return retlist
     else:
         return None
