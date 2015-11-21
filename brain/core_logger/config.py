@@ -11,8 +11,8 @@ def load_config(file='logger.conf'):
     d = {}
     for section in config.sections():
         d[section] = {}
-        for i in config.items(section):
-            d[section][i[0]] = i[1]
+        for key, val in config.items(section):
+            d[section][key] = val
 
     try:
         if d['sensors']['host_list']:
@@ -54,5 +54,5 @@ def is_allowed(client, conf):
         else:
             if host == 'localhost' and client == 'localhost':
                 allowed = True
-
+    print("Client is %s   and  hostlist is %s" % ( client, conf['sensors']['host_list'] ))
     return allowed
