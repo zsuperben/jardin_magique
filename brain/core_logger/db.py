@@ -25,7 +25,11 @@ def set_table_for_zone(con, zone):
     mycur =con.cursor(MySQLdb.cursors.DictCursor)
 
 
-    req = "CREATE TABLE " + zone + " ( `time` datetime(6) NOT NULL, `plant` smallint(5) NOT NULL, `soil` int(16) NOT NULL, PRIMARY KEY (`time`)  )"
+    req = "CREATE TABLE " + zone + """ ( `time` datetime(6) NOT NULL,
+    `plant` smallint(5) NOT NULL,
+    `soil` int(16) NOT NULL,
+    `temp` float(3,2),
+    PRIMARY KEY (`time`)  )"""
     print(req)
     num = mycur.execute(req)
     print num
