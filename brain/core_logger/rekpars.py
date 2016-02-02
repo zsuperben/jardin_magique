@@ -42,7 +42,7 @@ def parse_request(request):
         d['plant'] = get_plant(request)
         d['soil'] = get_soil(request)
         d['time'] = "'" + datetime.datetime.now().isoformat(sep=' ') + "'"
-        d['temp'] = 27
+        d['temp'] = get_temperature(request)
         if d['zone'] and d['plant'] and d['soil'] and d['time'] and d['temp']:
             retlist.append(d)
 
