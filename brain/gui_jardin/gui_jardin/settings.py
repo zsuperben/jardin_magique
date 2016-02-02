@@ -73,23 +73,26 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jardin',
-        'HOST': 'localhost',
-        'USER': 'django',
+        'HOST': '192.168.0.2',
+        'USER': 'test_laptop',
+        'PASSWORD':'biloute',
         'TEST_DEPENDENCIES': [],
     },
     'core':{
         'TEST_DEPENDENCIES': [],
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'jardin',
-        'HOST': 'localhost',
-        'USER': 'django',
+         'HOST': '192.168.0.2',
+        'USER': 'test_laptop',
+        'PASSWORD':'biloute',
+       'NAME': 'jardin',
         },
     'datalogger': {
         'TEST_DEPENDENCIES' : [],
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jardin',
-        'HOST': 'localhost',
-        'USER': 'django',
+        'HOST': '192.168.0.2',
+        'USER': 'test_laptop',
+        'PASSWORD':'biloute',
         }
 }
 
