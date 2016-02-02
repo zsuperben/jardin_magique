@@ -8,12 +8,12 @@ Add a script to flash arduinos ?                                                
                                                                                                                 |   Ajouter une vue pour régler le DHCP. 
 
 Ajouter une vue pour flasher l'arduino ?
+non pas directement, vue pour definir une config et la preparer, l'arduino la telecharge sur commande.
 
 
 
-
-Hack ESP8266 with arduino bootloader 
-Make a standar sensor sketch 
+                                                                                                                    Hack ESP8266 with arduino bootloader 
+                                                                                Make a standar sensor sketch 
 
 
 
@@ -23,10 +23,13 @@ Make a standar sensor sketch
 PROGRAMABLE ARDUINO via RPi WEB UI 
 
 => TEMPLATIZE ARDUINO SKETCH USING JINJA OR DJANGO TEMPLATE ! 
+    NO ! give the arduino the ability to load a new config from the runtime
 => MAKEFILE FOR ARDUINO 
-=> COMPILE WITH AVR-GCC 
+    not necessary
+=> COMPILE WITH AVR-GCC
+    who doesn't ?
 => FLASH WITH DD OF=/dev/USBtty0
-
+    no way.
 
 => Find back that pprintf tutorial with the F() macro.
 

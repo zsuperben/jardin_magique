@@ -10,7 +10,7 @@ void setup(void) {
 }
 
 void loop(void) {
-  byte i;
+  short int i;
   byte present = 0;
   byte data[12];
   byte addr[8];
@@ -67,4 +67,9 @@ void loop(void) {
   Serial.print(" CRC=");
   Serial.print( OneWire::crc8( data, 8), HEX);
   Serial.println();
+  for(i=0;i<9;i++){
+    Serial.print(data[i],BIN);
+  }
+  Serial.println();
+  delay(10000);
 }

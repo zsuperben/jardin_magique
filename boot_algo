@@ -1,0 +1,67 @@
+-> Lire l'EEPROM 
+
+-> Si config presente 
+	=> use it 
+	=> detect MAC/IP conflicts
+
+		get default config.
+		load EEPROM config 
+		try MAC = WHOHAS(EEPROM IP ) 
+		if MAC
+			get newconfig
+		else 
+			use loaded config (need to reboot ?)
+
+-> else 
+	get DHCP address
+	get Config from "brain"
+	write Config to EEPROM 
+
+
+-----
+
+
+Once config is loaded : 
+
+Launch webclient. 
+sleep for N sec 
+POST mesure 
+
+check reconfiguration token
+	=> IF PRESENT 
+		get new configuration 
+		validate new config 
+		writeconfig to EEPROM 
+		REbooT
+	=> else
+		continue;
+
+Clean Webclient 
+delete WebClient
+repeat
+
+---------------------------------------------------------------------------------------------------------
+Configuration DATA STRUCTURE : 
+
+All what is before position 69 must be treated as FIXED LENGTH 
+
+We can have flexibility after that
+
+Use Tokens to separate fields ;
+
+Then use list = strtok(token, string)
+Field separator : '\n'
+Key/Value separator : '='
+
+Example :
+IPADDR=WXYZ(4bytes)
+MCADDR=ABCDEF(6bytes)
+SERVER=WXYZ(4 Bytes)
+ID=sha1(NAME)(20 bytes)
+NUMPLANT=1byte
+NAME=VARIABLE LENGTH
+
+
+
+
+
