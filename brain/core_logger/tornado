@@ -1,0 +1,75 @@
+import simplejson as json
+from tornado_json.requesthandlers import APIHandler, APIError
+
+import logging
+
+import sys
+
+from tornado import ioloop
+from tornado_json import  application
+
+from db import *
+
+import MySQLdb
+
+from config import load_config,is_allowed
+
+
+class MeasureHandler(APIHandler):
+    def initialize(self):
+        self.connection = MySQLdb.connect(Conf['db']['host'],
+                               Conf['db']['user'],
+                               Conf['db']['password'],
+                               Conf['db']['db'])
+    def post(self):
+        data = dict
+        try:
+            #load JSON body
+            data = json.loads(self.request.data)
+            if ("zone", "plant", "soil", "temp", "time") not in data:
+
+                raise ValueError()
+            else:
+                # add some sanity check some day
+                get_table_for_zone(self.connection, data['zone'])
+
+        except:
+            raise APIError(400)
+
+
+if __name__ == "__main__":
+    opt, trash = getopt.getopt(args=sys.argv[1:],
+                               shortopts="p:c:",
+                               longopts=['password', 'config'])
+    dbpassword = ''
+    configfile = ''
+    for o,a in opt:
+        if o in ("-p", "--password"):
+            dbpassword = a
+        elif o in ("-c", "--config"):
+            configfile = a
+        else:
+            print("either no password supplied or wrong options")
+            sys.exit(5)
+
+    if configfile is not '':
+        Conf = load_config(configfile)
+    else:
+        Conf = load_config("/etc/jardin/logger.conf")
+
+    if not Conf:
+        sys.stderr.write("Invalid config file.")
+        sys.exit(5)
+
+    #Overrides config file value if command line option is passed.
+    if dbpassword is not '':
+        Conf['db']['password'] = dbpassword
+
+    toto = application.Application(
+        [
+            (r'/measure/', MeasureHandler)
+        ],
+        {}
+    )
+    toto.listen(8888)
+    ioloop.IOLoop.instance().start()
