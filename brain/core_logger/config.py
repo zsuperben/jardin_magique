@@ -27,7 +27,8 @@ def load_config(file='logger.conf'):
         fh = open(d['logger']['logfile'], 'a')
         fh.close()
 
-    except ( KeyError, IOError ):
+    except ( KeyError, IOError ) as e:
+        print(e)
         return None
 
     #building a list of valid ips
