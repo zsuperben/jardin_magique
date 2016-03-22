@@ -5,14 +5,14 @@ import RPi.GPIO as gpio
 gpio.setmode(gpio.BCM)
 
 
-gpio.setup(20, gpio.OUTPUT, initial=gpio.LOW) # Switch 1
-gpio.setup(21, gpio.OUTPUT, initial=gpio.LOW) # Switch 2
-gpio.setup(13, gpio.OUTPUT, initial=gpio.LOW) # Switch 3
-gpio.setup(26, gpio.OUTPUT, initial=gpio.LOW) # Switch 4
-gpio.setup(16, gpio.OUTPUT, initial=gpio.LOW) # Switch 5
-gpio.setup(6, gpio.OUTPUT, initial=gpio.LOW) # Switch 6
-gpio.setup(5, gpio.OUTPUT, initial=gpio.LOW) # Switch 7
-gpio.setup(19, gpio.OUTPUT, initial=gpio.LOW) # Switch 8
+gpio.setup(20, gpio.OUT, initial=gpio.LOW) # Switch 1
+gpio.setup(21, gpio.OUT, initial=gpio.LOW) # Switch 2
+gpio.setup(13, gpio.OUT, initial=gpio.LOW) # Switch 3
+gpio.setup(26, gpio.OUT, initial=gpio.LOW) # Switch 4
+gpio.setup(16, gpio.OUT, initial=gpio.LOW) # Switch 5
+gpio.setup(6, gpio.OUT, initial=gpio.LOW) # Switch 6
+gpio.setup(5, gpio.OUT, initial=gpio.LOW) # Switch 7
+gpio.setup(19, gpio.OUT, initial=gpio.LOW) # Switch 8
 
 SW1 = 20
 SW2 = 21

@@ -32,7 +32,7 @@ def set_table_for_zone(con, zone):
     PRIMARY KEY (`time`)  )"""
     print(req)
     num = mycur.execute(req)
-    print num
+    print(num)
 
     con.commit()
 

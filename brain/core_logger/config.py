@@ -1,12 +1,13 @@
 __author__ = 'zsb'
-import ConfigParser
+#import ConfigParser
+from configparser import ConfigParser
 import os
 import netaddr
 
 def load_config(file='logger.conf'):
     if not os.path.isfile(file):
         raise Exception("Config file not found ")
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser()
     config.read(file)
     d = {}
     for section in config.sections():
@@ -16,7 +17,7 @@ def load_config(file='logger.conf'):
 
     try:
         if d['sensors']['host_list']:
-            print d['sensors']['host_list'].split(' ')
+            print(d['sensors']['host_list'].split(' '))
             d['sensors']['host_list'] = d['sensors']['host_list'].split(' ')
         else:
             raise KeyError("Incomplete config file !")
@@ -26,7 +27,7 @@ def load_config(file='logger.conf'):
         fh = open(d['logger']['logfile'], 'a')
         fh.close()
 
-    except KeyError, IOError:
+    except ( KeyError, IOError ):
         return None
 
     #building a list of valid ips

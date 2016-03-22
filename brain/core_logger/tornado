@@ -23,7 +23,7 @@ def switchOff(sw):
 
 class SwitchHandler(APIHandler):
     def initialize(self):
-        self.
+        pass
 
     def get(self):
         self.write()
