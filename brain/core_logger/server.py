@@ -29,7 +29,12 @@ class SwitchHandler(APIHandler):
         self.write()
 
     def post(self):
-        data = self.get_body_arguments()
+        if self.request.body:
+            try:
+                data = json.loads(self.request.body)
+            except ValueError:
+                print("Error parsing JSON")
+                raise APIError(400)
         if data["switch"] not in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
             raise APIError(status_code=404,log_message="Wrong switch argument..." )
         if not data["duration"]:
