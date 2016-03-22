@@ -14,14 +14,14 @@ gpio.setup(6, gpio.OUT, initial=gpio.LOW) # Switch 6
 gpio.setup(5, gpio.OUT, initial=gpio.LOW) # Switch 7
 gpio.setup(19, gpio.OUT, initial=gpio.LOW) # Switch 8
 
-SW1 = 20
-SW2 = 21
-SW3 = 13
-SW4 = 26
-SW5 = 16
-SW6 = 6
-SW7 = 5
-SW8 = 19
+switches = {"SW1": 20,
+"SW2": 21,
+"SW3": 13,
+"SW4": 26,
+"SW5": 16,
+"SW6": 6,
+"SW7": 5,
+"SW8": 19}
 
 
 
@@ -142,7 +142,7 @@ def sw8off():
 
 def turnOn(sw):
     try:
-        gpio.output(sw, gpio.HIGH)
+        gpio.output(switches[sw], gpio.HIGH)
         return True
     except:
         return False
@@ -150,7 +150,7 @@ def turnOn(sw):
 
 def turnOff(sw):
     try:
-        gpio.output(sw, gpio.LOW)
+        gpio.output(switches[sw], gpio.LOW)
         return True
     except:
         return False

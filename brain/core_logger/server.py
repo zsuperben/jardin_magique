@@ -31,7 +31,8 @@ class SwitchHandler(APIHandler):
     def post(self):
         if self.request.body:
             try:
-                data = json.loads(self.request.body)
+                print(self.request.body)
+                data = json.loads(self.request.body.decode('utf-8'))
             except ValueError:
                 print("Error parsing JSON")
                 raise APIError(400)
