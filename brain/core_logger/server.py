@@ -15,20 +15,31 @@ import MySQLdb
 from config import load_config,is_allowed
 
 import watering
-from celery import Celery, signature
-app = Celery("LaQueue", broker="amqp://guest@localhost//")
-@app.task
-def switchOff(sw):
-    watering.turnOff(sw)
+from celery import signature
+import tasks
+
+
+
+
 
 class SwitchHandler(APIHandler):
     def initialize(self):
         pass
 
-    def get(self):
-        self.write()
+    def get(self, *args, **kwargs):
+        data = {}
+        
+        try: 
+            if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
+                data['switch'] = swurl        
+                
+        except NameError:
+            data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
+                
+        
+        self.write('{"code": 200, "status": "OK", "switch": "%s", "state": "%s" }' %(data['switch'], gpio.INPUT(switches[data['switch']])))
 
-    def post(self):
+    def post(self, *args, **kwargs):
         if self.request.body:
             try:
                 print(self.request.body)
@@ -46,13 +57,23 @@ class SwitchHandler(APIHandler):
             data["duration"] = 600
 
         watering.turnOn(data["switch"])
-        signature(switchOff, args=data["switch"], countdown=data["duration"] )
-
+        tasks.lightOut.apply_async(args=[data['switch']], countdown=data['duration'])
+        self.write('{"code": 200, "status": "OK", "switch": %s, "duration": %d}' % (data['switch'], data['duration']) )
+        
 
     def delete(self, *args, **kwargs):
-        data = self.get_body_arguments()
-        watering.turnOff()
-
+        data = {}
+        try:
+            if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
+                data['switch'] = swurl
+        except NameError:
+            data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
+            print("I get sw = %s" % data['switch'])
+        except:
+            raise APIError(400)
+        
+        watering.turnOff(data['switch'])
+        self.write('{"status":"OK", "code": 200, "switch": %s}' % data['switch'])
 
 class MeasureHandler(APIHandler):
     def initialize(self):
@@ -107,7 +128,8 @@ if __name__ == "__main__":
     toto = application.Application(
         [
             (r'/measure/', MeasureHandler),
-            (r'/switch/', SwitchHandler)
+            (r'/switch/(?P<swurl>\d)/', SwitchHandler),
+            (r'/switch/', SwitchHandler),
         ],
         {}
     )
