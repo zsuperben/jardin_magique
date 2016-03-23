@@ -1,6 +1,6 @@
 import  json
-from tornado_json.requesthandlers import APIHandler, APIError, schema
-
+from tornado_json.requesthandlers import APIHandler, APIError 
+from tornado_json import schema
 import logging
 
 import sys
@@ -67,7 +67,7 @@ class SwitchHandler(APIHandler):
         except NameError:
             data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
             print("I get sw = %s" % data['switch'])
-        except e:
+        except Exception as e:
             print(e)
             raise APIError(400)
         
@@ -87,7 +87,7 @@ class MeasureHandler(APIHandler):
     def initialize(self):
         pass    
     
-    @schema.validate(inpur_schema=measure_schema)
+    @schema.validate(input_schema=measure_schema)
     def post(self):
         data = {}
         try:
@@ -95,12 +95,13 @@ class MeasureHandler(APIHandler):
             data = json.loads(self.request.body.decode("utf-8"))
             # add some sanity check some day
             data["time"] = datetime.datetime.now()
-            insert_dict_into_db(connection, get_table_for_zone(connection, data['zone'], data))
+            insert_dict_into_db(connection, get_table_for_zone(connection, data['zone']), data)
                 
 
          
          
-        except:
+        except Exception as e:
+            print(e)
             raise APIError(400)
 
 

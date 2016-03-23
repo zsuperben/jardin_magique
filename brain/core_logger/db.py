@@ -6,7 +6,7 @@ import MySQLdb.cursors
 
 def get_table_for_zone(con, zone):
     if type(con) is not MySQLdb.connections.Connection or type(zone) is not str:
-        raise ValueError('Non biloute')
+        raise ValueError('Non biloute c\'est pas une connection')
 
     mycur =con.cursor(MySQLdb.cursors.DictCursor)
     try:
