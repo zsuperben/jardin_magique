@@ -1,5 +1,5 @@
 import  json
-from tornado_json.requesthandlers import APIHandler, APIError
+from tornado_json.requesthandlers import APIHandler, APIError, schema
 
 import logging
 
@@ -17,9 +17,7 @@ from config import load_config,is_allowed
 import watering
 from celery import signature
 import tasks
-
-
-
+import datetime
 
 
 class SwitchHandler(APIHandler):
@@ -69,30 +67,39 @@ class SwitchHandler(APIHandler):
         except NameError:
             data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
             print("I get sw = %s" % data['switch'])
-        except:
+        except e:
+            print(e)
             raise APIError(400)
         
         watering.turnOff(data['switch'])
         self.write('{"status":"OK", "code": 200, "switch": %s}' % data['switch'])
 
+
+measure_schema = { "type":"object",
+                   "properties":
+                        { "zone": {"type":"number"},
+                          "soil": {"type":"number"},
+                          "temp": {"type":"number"},
+                          "plant": {"type":"number"}
+                          }}
+
 class MeasureHandler(APIHandler):
     def initialize(self):
-        self.connection = MySQLdb.connect(Conf['db']['host'],
-                               Conf['db']['user'],
-                               Conf['db']['password'],
-                               Conf['db']['db'])
+        pass    
+    
+    @schema.validate(inpur_schema=measure_schema)
     def post(self):
-        data = dict
+        data = {}
         try:
             #load JSON body
-            data = json.loads(self.request.data)
-            if ("zone", "plant", "soil", "temp", "time") not in data:
+            data = json.loads(self.request.body.decode("utf-8"))
+            # add some sanity check some day
+            data["time"] = datetime.datetime.now()
+            insert_dict_into_db(connection, get_table_for_zone(connection, data['zone'], data))
+                
 
-                raise ValueError()
-            else:
-                # add some sanity check some day
-                get_table_for_zone(self.connection, data['zone'])
-
+         
+         
         except:
             raise APIError(400)
 
@@ -124,6 +131,14 @@ if __name__ == "__main__":
     #Overrides config file value if command line option is passed.
     if dbpassword is not '':
         Conf['db']['password'] = dbpassword
+
+
+    connection = MySQLdb.connect(Conf['db']['host'],
+                               Conf['db']['user'],
+                               Conf['db']['password'],
+                               Conf['db']['db'])
+
+
 
     toto = application.Application(
         [
