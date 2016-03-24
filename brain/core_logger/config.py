@@ -53,8 +53,11 @@ def is_allowed(client, conf):
             if host.__contains__(client):
                 allowed = True
 
+
         else:
             if host == 'localhost' and client == 'localhost':
                 allowed = True
-    print("Client is %s   and  hostlist is %s" % ( client, conf['sensors']['host_list'] ))
+    print("Client is %s   and  hostlist is %s, Client is allowed : %s" %
+          ( client, conf['sensors']['host_list'], allowed )
+          )
     return allowed
