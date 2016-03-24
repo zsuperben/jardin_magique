@@ -36,7 +36,7 @@ class MeasureHandler(APIHandler):
             data = json.loads(self.request.body.decode("utf-8"))
             # add some sanity check some day
             data["time"] = datetime.datetime.now()
-            data['table'] = "mesure_tbl_" + data['zone']
+            data['table'] = "mesure_tbl_" + str(data['zone'])
             if not get_table_for_zone(self.dbc, data['table']):
                 set_table_for_zone(self.dbc, data['table    '])
             insert_dict_into_db(self.dbc, data['table'], data)
