@@ -14,11 +14,6 @@ import MySQLdb
 
 from config import load_config,is_allowed
 
-import watering
-from celery import signature
-import tasks
-import datetime
-
 from measures import MeasureHandler
 from switchesManagement import SwitchHandler
 
@@ -56,7 +51,7 @@ if __name__ == "__main__":
         Conf['db']['password'] = dbpassword
 
 
-    connection = MySQLdb.connect(Conf['db']['host'],
+    connection= MySQLdb.connect(Conf['db']['host'],
                                Conf['db']['user'],
                                Conf['db']['password'],
                                Conf['db']['db'])
@@ -65,7 +60,7 @@ if __name__ == "__main__":
 
     toto = application.Application(
         [
-            (r'/measure/', MeasureHandler),
+            (r'/measure/', MeasureHandler, {"connection": connection, "Conf": Conf}),
             (r'/switch/(?P<swurl>\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
         ],

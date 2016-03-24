@@ -155,7 +155,9 @@ def turnOff(sw):
     except:
         return False
 
-
-
-
+def readOne(sw):
+    try:
+        return gpio.input(switches[sw])
+    except:
+        return None
 
