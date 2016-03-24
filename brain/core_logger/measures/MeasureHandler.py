@@ -19,9 +19,9 @@ class MeasureHandler(APIHandler):
                           "plant": {"type":"number"}
                           }}
 
-    def initialize(self, environment):
-        self.dbc = environment['connection']
-        myconf = environment['Conf']
+    def initialize(self, connection=None, Conf=None):
+        self.dbc = connection
+        myconf =  Conf
         x_real_ip = self.request.headers.get("X-Real-IP")
         remote_ip = x_real_ip or self.request.remote_ip
         if not is_allowed(remote_ip, myconf):

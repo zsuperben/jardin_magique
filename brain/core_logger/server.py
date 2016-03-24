@@ -1,8 +1,3 @@
-import  json
-from tornado_json.requesthandlers import APIHandler, APIError 
-from tornado_json import schema
-import logging
-
 import sys
 import getopt
 from tornado import ioloop
@@ -14,7 +9,7 @@ import MySQLdb
 
 from config import load_config,is_allowed
 
-from measures import MeasureHandler
+from measures.MeasureHandler import MeasureHandler
 from switchesManagement import SwitchHandler
 
 
@@ -60,7 +55,7 @@ if __name__ == "__main__":
 
     toto = application.Application(
         [
-            (r'/measure/', MeasureHandler, {"connection": connection, "Conf": Conf}),
+            (r'/measure/', MeasureHandler, dict(connection=connection, Conf=Conf)),
             (r'/switch/(?P<swurl>\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
         ],
