@@ -23,6 +23,9 @@ from measures import MeasureHandler
 from switchesManagement import SwitchHandler
 
 
+from sys import path
+from os.path import realpath, dirname
+path.append(realpath(dirname(__file__)))
 
 if __name__ == "__main__":
     opt, trash = getopt.getopt(args=sys.argv[1:],

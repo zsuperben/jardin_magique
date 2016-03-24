@@ -6,8 +6,8 @@ from tornado_json import schema
 import json
 import datetime
 from  netaddr import IPNetwork
-from ..db import insert_dict_into_db, get_table_for_zone
-from ..config import is_allowed
+from db import insert_dict_into_db, get_table_for_zone
+from config import is_allowed
 
 try:
     Conf
@@ -17,6 +17,12 @@ except NameError:
     Conf = {}
     Conf['sensors'] = {}
     Conf['sensors']['host_list'] = [ IPNetwork("192.168.0.0/24") ]
+
+try:
+    connection
+except NameError:
+    print("Cannot access open conection... fucked")
+    raise SystemExit
 
 class MeasureHandler(APIHandler):
     measure_schema = { "type":"object",

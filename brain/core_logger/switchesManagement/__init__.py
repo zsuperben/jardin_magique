@@ -1,7 +1,7 @@
 __author__ = 'zsb'
 from tornado_json.requesthandlers import APIError, APIHandler
-from ..watering import gpio, switches, turnOn, turnOff
-from ..tasks import lightOut
+from watering import gpio, switches, turnOn, turnOff
+from tasks import lightOut
 
 
 class SwitchHandler(APIHandler):
@@ -14,12 +14,17 @@ class SwitchHandler(APIHandler):
         try:
             if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
                 data['switch'] = swurl
-
+            else:
+                raise APIError(400)
+            msg = '{"code": 200, "status": "OK", "switch": "%s", "state": "%s" }' %(data['switch'], gpio.INPUT(switches[data['switch']]))
         except NameError:
-            data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
+            msg = '{"code":200, "status": "OK", "switch": {'
 
+            for key, val in switches:
+                msg = msg + '"%s" : "%s", ' % (key, gpio.INPUT(val))
+            msg = msg + '}}'
 
-        self.write('{"code": 200, "status": "OK", "switch": "%s", "state": "%s" }' %(data['switch'], gpio.INPUT(switches[data['switch']])))
+        self.write()
 
     def post(self, *args, **kwargs):
         if self.request.body:
