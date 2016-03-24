@@ -35,16 +35,16 @@ class MeasureHandler(APIHandler):
             #load JSON body
             data = json.loads(self.request.body.decode("utf-8"))
             # add some sanity check some day
-            data["time"] = datetime.datetime.now()
-            data['table'] = "mesure_tbl_" + str(data['zone'])
-            if not get_table_for_zone(self.dbc, data['table']):
-                set_table_for_zone(self.dbc, data['table    '])
-            insert_dict_into_db(self.dbc, data['table'], data)
+            data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
+            table = "mesure_tbl_" + str(data['zone'])
+            if not get_table_for_zone(self.dbc, table):
+                set_table_for_zone(self.dbc, table)
+            insert_dict_into_db(self.dbc, table, data)
 
 
 
 
         except Exception as e:
-            print(e)
+            print("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
             raise APIError(400)
 
