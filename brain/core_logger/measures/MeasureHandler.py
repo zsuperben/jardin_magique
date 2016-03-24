@@ -6,7 +6,7 @@ from tornado_json import schema
 import json
 import datetime
 from  netaddr import IPNetwork
-from db import insert_dict_into_db, get_table_for_zone
+from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone
 from config import is_allowed
 
 
@@ -36,7 +36,10 @@ class MeasureHandler(APIHandler):
             data = json.loads(self.request.body.decode("utf-8"))
             # add some sanity check some day
             data["time"] = datetime.datetime.now()
-            insert_dict_into_db(self.dbc, get_table_for_zone(self.dbc, data['zone']), data)
+            data['table'] = "mesure_tbl_" + data['zone']
+            if not get_table_for_zone(self.dbc, data['table']):
+                set_table_for_zone(self.dbc, data['table    '])
+            insert_dict_into_db(self.dbc, data['table'], data)
 
 
 
