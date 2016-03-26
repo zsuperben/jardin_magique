@@ -2,7 +2,7 @@ __author__ = 'zsb'
 from tornado_json.requesthandlers import APIError, APIHandler
 from watering import gpio, switches, turnOn, turnOff
 from tasks import lightOut
-
+import json
 
 class SwitchHandler(APIHandler):
     def initialize(self):
