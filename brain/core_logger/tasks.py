@@ -28,6 +28,8 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'task': 'tasks.lightUp',
         'scheadule': crontab(hour=0),
         'args': "SW7"
+        
+        }
 }
 
 MIN_SOIL = 80
