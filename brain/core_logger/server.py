@@ -56,7 +56,7 @@ if __name__ == "__main__":
     toto = application.Application(
         [
             (r'/measure/', MeasureHandler, dict(connection=connection, Conf=Conf)),
-            (r'/switch/(?P<swurl>\d)/', SwitchHandler),
+            (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
         ],
         {}

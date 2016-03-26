@@ -6,25 +6,32 @@ import json
 
 class SwitchHandler(APIHandler):
     def initialize(self):
+        self.set_header("Content-Type","application/json")        
         pass
 
     def get(self, *args, **kwargs):
         data = {}
-
+        data["code"] = 200
+        data["status"] = "OK"
+        
         try:
             if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
                 data['switch'] = swurl
             else:
                 raise APIError(400)
-            msg = '{"code": 200, "status": "OK", "switch": "%s", "state": "%s" }' %(data['switch'], gpio.INPUT(switches[data['switch']]))
+
+            data['state'] = gpio.input(swurl)
+
+
         except NameError:
-            msg = '{"code":200, "status": "OK", "switch": {'
+            #msg = '{"code":200, "status": "OK", "switch": {'
+            data['switch'] = {}
+            for key in switches:
+                #msg = msg + '"%s" : "%s", ' % (key, gpio.input(switches[key]))
+                data['switch'][key] = gpio.input(switches[key])
+            #msg = msg + '}}'
 
-            for key, val in switches:
-                msg = msg + '"%s" : "%s", ' % (key, gpio.INPUT(val))
-            msg = msg + '}}'
-
-        self.write()
+        self.write(data)
 
     def post(self, *args, **kwargs):
         if self.request.body:

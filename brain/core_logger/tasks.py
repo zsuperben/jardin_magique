@@ -14,7 +14,7 @@ connection = MySQLdb.connect("localhost",
                              "ffsomg2016",
                              "jardin")
 
-logging.basicConfig(filename="/var/log/jardin/")
+logging.basicConfig(filename="/var/log/jardin/celery")
 
 app = Celery()
 app.conf.CELERY_TIMEZONE = 'Europe/Paris'
