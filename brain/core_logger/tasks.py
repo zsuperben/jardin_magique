@@ -26,7 +26,7 @@ app.conf.CELERYBEAT_SCHEDULE = {
     },
     "Switchitoff": {
         'task': 'tasks.lightUp',
-        'scheadule': crontab(hour=0),
+        'schedule': crontab(hour=0),
         'args': "SW7"
         
         }
