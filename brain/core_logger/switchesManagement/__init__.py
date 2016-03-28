@@ -67,6 +67,6 @@ class SwitchHandler(APIHandler):
             print(e)
             raise APIError(400)
 
-        watering.turnOff(data['switch'])
+        turnOff(data['switch'])
         self.write('{"status":"OK", "code": 200, "switch": %s}' % data['switch'])
 

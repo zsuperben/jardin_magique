@@ -21,13 +21,13 @@ app.conf.CELERY_TIMEZONE = 'Europe/Paris'
 app.conf.CELERYBEAT_SCHEDULE = {
     'TurnOnTheLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=6),
-        'args': "SW7"
+        'schedule': crontab(hour=0),
+        'args': ("SW7")
     },
     "Switchitoff": {
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=0),
-        'args': "SW7"
+        'schedule': crontab(hour=6),
+        'args': ("SW7")
         
         }
 }
