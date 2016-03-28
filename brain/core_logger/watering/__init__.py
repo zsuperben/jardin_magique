@@ -3,16 +3,16 @@ __author__ = 'zsb'
 import RPi.GPIO as gpio
 
 gpio.setmode(gpio.BCM)
+gpio.setwarnings(False)
 
-
-gpio.setup(20, gpio.OUT, initial=gpio.LOW) # Switch 1
-gpio.setup(21, gpio.OUT, initial=gpio.LOW) # Switch 2
-gpio.setup(13, gpio.OUT, initial=gpio.LOW) # Switch 3
-gpio.setup(26, gpio.OUT, initial=gpio.LOW) # Switch 4
-gpio.setup(16, gpio.OUT, initial=gpio.LOW) # Switch 5
-gpio.setup(6, gpio.OUT, initial=gpio.LOW) # Switch 6
-gpio.setup(5, gpio.OUT, initial=gpio.LOW) # Switch 7
-gpio.setup(19, gpio.OUT, initial=gpio.LOW) # Switch 8
+gpio.setup(20, gpio.OUT) # Switch 1
+gpio.setup(21, gpio.OUT) # Switch 2
+gpio.setup(13, gpio.OUT) # Switch 3
+gpio.setup(26, gpio.OUT) # Switch 4
+gpio.setup(16, gpio.OUT) # Switch 5
+gpio.setup(6, gpio.OUT) # Switch 6
+gpio.setup(5, gpio.OUT) # Switch 7
+gpio.setup(19, gpio.OUT) # Switch 8
 
 switches = {"SW1": 20,
 "SW2": 21,

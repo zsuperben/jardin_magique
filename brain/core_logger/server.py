@@ -11,6 +11,7 @@ from config import load_config,is_allowed
 
 from measures.MeasureHandler import MeasureHandler
 from switchesManagement import SwitchHandler
+from videohandler import VideoHandler
 
 
 from sys import path
@@ -58,6 +59,7 @@ if __name__ == "__main__":
             (r'/measure/', MeasureHandler, dict(connection=connection, Conf=Conf)),
             (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
+            (r'/video/', VideoHandler),
         ],
         {}
     )
