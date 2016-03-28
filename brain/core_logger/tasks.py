@@ -22,12 +22,12 @@ app.conf.CELERYBEAT_SCHEDULE = {
     'TurnOnTheLight': {
         'task': 'tasks.lightOut',
         'schedule': crontab(hour=0),
-        'args': ("SW7")
+        'args': tuple("SW7")
     },
     "Switchitoff": {
         'task': 'tasks.lightUp',
         'schedule': crontab(hour=6),
-        'args': ("SW7")
+        'args': tuple("SW7")
         
         }
 }
@@ -37,15 +37,21 @@ MIN_SOIL = 80
 
 class CallbackTask(Task):
     def on_success(self, retval, task_id, args, kwargs):
-        pass
+        logging.info(
+            'Successfully ran %s' % str(task_id)
+        )
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        pass
+        logging.error(
+            'Failed to run %s' % str(task_id)
+        )
 
 
 @app.task(base=CallbackTask)
 def lightOut(sw):    
     return watering.turnOff(sw)
+
+
 @app.task(base=CallbackTask)
 def lightUp(sw):
     return watering.turnOn(sw)
