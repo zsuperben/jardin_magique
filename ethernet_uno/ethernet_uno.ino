@@ -17,6 +17,16 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#define ONE_WIRE_BUS 7
+ 
+// Setup a oneWire instance to communicate with any OneWire devices 
+// (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+ 
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
 
 // Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield
@@ -33,15 +43,20 @@ IPAddress ip(192, 168, 0, 227);
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
 EthernetClient client;
-const short int zone[6]  = { 10, 10, 10, 10, 10, 10 };
-const short int plant[6] = { 12, 31, 22, 53, 47, 64 };
+const short int zone[6]  = { 1, 1, 1, 1, 1, 1 };
+const short int plant[6] = { 1, 2, 3, 4, 5, 6 };
+
+
+
+
+
+
+
 
 void setup() {
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  }
+
   Serial.println("Hello World!");
   delay(5000);
   // start the Ethernet connection:
@@ -50,7 +65,7 @@ void setup() {
 //    // no point in carrying on, so do nothing forevermore:
 //    // try to congifure using IP address instead of DHCP:
     Ethernet.begin(mac, ip);
-  
+    sensors.begin();
   // give the Ethernet shield a second to initialize:
   delay(1000);
   Serial.println("connecting...");
@@ -59,6 +74,10 @@ void setup() {
 
 }
 
+const char* fmt = "{\"zone\": %2d, \"plant\": %2d, \"soil\": %3d, \"temp\": %s }";
+char dstr[128] ;
+char t[6];
+float tmp;
 void loop()
 {
   // if there are incoming bytes available
@@ -68,34 +87,56 @@ void loop()
 //    Serial.print(c);
 //  }
 
-    
-
-    for(int i=0;i<6;i++){
-      Serial.print("zone=");
+  String req;
+  Serial.println("requesting temperature...");
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  Serial.println("Done.");
+  tmp = sensors.getTempCByIndex(0);
+  dtostrf(tmp,2,2,t);
+  Serial.print("Temp is : ");
+  Serial.println(tmp, 2);
+    for(int i=0;i<3;i++){
+      Serial.print(F("zone="));
       Serial.print(zone[i], DEC);
-      Serial.print("   plant=");
+      Serial.print(F("   plant="));
       Serial.print(plant[i], DEC);
-      Serial.print("   soil=");
+      Serial.print(F("   soil="));
       Serial.print(analogRead(i),DEC);
-      Serial.print("   for plant ");
+      Serial.print(F("   for plant "));
       Serial.print(i, DEC);
       Serial.println();
     }
-  if (client.connect(server, 8080)) {
+  if (client.connect(server, 8888)) {
     Serial.println("connected");
+    bool cnx = 1 ;
     // Make a HTTP request:
-
-    for(int i=0;i<6;i++){
+    
+    for(int i=0;i<3;i++){
+      //client.flush();
+      if(!cnx){
+        client.connect(server, 8888);
+      }
+      Serial.print(F("What the fuck~~\n"));
+      client.println(F("POST /measure/ HTTP/1.1"));
+      client.println(F("Host: 192.168.0.201"));
+      client.println(F("User-Agent: sensor/0.1"));
+      client.println(F("Connection: close"));
+      client.println(F("Content-Type: application/x-www-urlencoded"));
+      Serial.println("been there");
+      sprintf(dstr, fmt, zone[i], plant[i], analogRead(i), t);
+      Serial.print(dstr);
+      client.print(F("Content-Length: "));
+      client.print(strlen(dstr));
+      client.print(F("\r\n"));
+      client.print(F("\r\n"));
+      client.print(dstr);
+      client.print(F("\r\n"));
       client.flush();
-      Serial.print("What the fuck~~\n");
-      client.print("zone=10  plant=");
-      client.print(plant[i]);
-      client.print("   soil=");
-      client.print(analogRead(i));
-      client.write("   for plant ");
-      client.print(i);
-      client.write("\n");
+      client.stop();
+      cnx =0;
+      delay(10000);    
 
+      
     }
 
     
@@ -110,4 +151,5 @@ void loop()
   delay(1000*20);
 
 }
+
 
