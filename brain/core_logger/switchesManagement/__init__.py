@@ -15,7 +15,7 @@ class SwitchHandler(APIHandler):
         data["status"] = "OK"
         
         try:
-            if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
+            if swurl in switches.keys():
                 data['switch'] = swurl
             else:
                 raise APIError(400)
@@ -41,7 +41,7 @@ class SwitchHandler(APIHandler):
             except ValueError:
                 print("Error parsing JSON")
                 raise APIError(400)
-        if data["switch"] not in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
+        if data["switch"] not in switches.keys():
             raise APIError(status_code=404,log_message="Wrong switch argument..." )
         if not data["duration"]:
             data["duration"] = 2*60 # 5 minutes
@@ -58,7 +58,7 @@ class SwitchHandler(APIHandler):
     def delete(self, *args, **kwargs):
         data = {}
         try:
-            if swurl in ("SW1", "SW2", "SW3", "SW4", "SW5", "SW6", "SW7", "SW8"):
+            if swurl in switches.keys():
                 data['switch'] = swurl
         except NameError:
             data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]

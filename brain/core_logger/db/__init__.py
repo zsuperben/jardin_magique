@@ -28,7 +28,7 @@ def set_table_for_zone(con, zone):
     req = "CREATE TABLE " + zone + """ ( `time` datetime(6) NOT NULL,
     `plant` smallint(5) NOT NULL,
     `soil` int(16) NOT NULL,
-    `temp` float(3,2),
+    `temp` float(4,2),
     PRIMARY KEY (`time`)  )"""
     print(req)
     num = mycur.execute(req)

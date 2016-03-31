@@ -8,7 +8,7 @@ import datetime
 from  netaddr import IPNetwork
 from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone
 from config import is_allowed
-
+import logging
 
 class MeasureHandler(APIHandler):
     measure_schema = { "type":"object",
@@ -23,17 +23,19 @@ class MeasureHandler(APIHandler):
         self.dbc = connection
         myconf =  Conf
         x_real_ip = self.request.headers.get("X-Real-IP")
-        remote_ip = x_real_ip or self.request.remote_ip
-        if not is_allowed(remote_ip, myconf):
+        self.remote_ip = x_real_ip or self.request.remote_ip
+        if not is_allowed(self.remote_ip, myconf):
             raise APIError(401)
 
 
     @schema.validate(input_schema=measure_schema)
     def post(self):
         data = {}
+        logging.info("New meqsure from %s" % self.remote_ip)
         try:
             #load JSON body
             data = json.loads(self.request.body.decode("utf-8"))
+            
             # add some sanity check some day
             data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
             table = "mesure_tbl_" + str(data['zone'])

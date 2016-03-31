@@ -23,21 +23,33 @@ app.conf.CELERY_TIMEZONE = 'Europe/Paris'
 
 
 light =[]
-light.append("SW7")
-
+light.append( "SW7")
+olight = []
+olight.append("SW5")
 
 app.conf.CELERYBEAT_SCHEDULE = {
     'TurnOffTheLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=0),
+        'schedule': crontab(hour=0, minute=0),
         'args': light
     },
     "Switchiton": {
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=6),
+        'schedule': crontab(hour=6, minute=0),
         'args': light
         
-        }
+        },
+    "thatOtherLightOn":{
+        'task': 'tasks.lightup',
+        'schedule': crontab(hour=6, minute=5),
+        'args': olight,
+    },    
+    'TurnOffTheoLight': {
+        'task': 'tasks.lightOut',
+        'schedule': crontab(hour=0, minute=0),
+        'args': olight
+    },
+ 
 }
 
 MIN_SOIL = 80
@@ -57,12 +69,18 @@ class CallbackTask(Task):
 
 @app.task(base=CallbackTask)
 def lightOut(sw, *args, **kwargs):    
-    return watering.turnOff(sw)
+    if type(sw) is list:
+        return [ watering.turnOff(x) for x in sw ]
+    else:
+        return watering.turnOff(sw)
 
 
 @app.task(base=CallbackTask)
 def lightUp(sw, *args, **kwargs):
-    return watering.turnOn(sw)
+    if type(sw) is list:
+        return [ watering.turnOn(x) for x in sw ]
+    else:
+        return watering.turnOn(sw)
 
 
 WaterIsNeeded = False
@@ -77,8 +95,7 @@ def CheckForAction():
     for avg in allAverages:
         if allAverages[avg] <= MIN_SOIL:
             waterIsNeeded = True
-            logging.warning("Water is needed in zone : '%s' average is %d" % (avg)
-
+            logging.warning("Water is needed in zone : '%s' average is %d" % (avg))
 
 
 
