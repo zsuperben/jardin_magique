@@ -54,6 +54,11 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(minutes=30),
         'args': (),
     },
+    'PutWaterOnSeeds': {
+        'task': 'tasks.arrosage',
+        'schedule': timedelta(hours=12),
+        'args': (),
+    },
  
 }
 
@@ -88,10 +93,10 @@ def lightUp(sw, *args, **kwargs):
         return watering.turnOn(sw)
 
 
-WaterIsNeeded = False
 
 @app.task(base=CallbackTask)
 def CheckForAction():
+    WaterIsNeeded = False
     allAverages  = CalculAvg()
     if not allAverages:
         logging.error("Can't tell if water is needed : no measures ")
@@ -136,5 +141,23 @@ def CalculAvg():
 
 @app.task(base=CallbackTask)
 def ventilation():
+    logging.info("Ventilation on for 20 seconds")
     watering.turnOff("SW9")
     lightUp.apply_async(["SW9"], countdown=20)
+
+
+@app.task(base=CallbackTask)
+def arrosage():
+    logging.warning("Turning on watering for two minutes")
+    watering.turnOn("SW6")
+    lightOut.apply_async(["SW6"], countdown=20)
+
+
+@app.task(base=CallbackTask)
+def remplissage_cuve():
+    logging.warning("Filling up the water tank on 1st floor")
+    watering.turnOn("SW4")
+    watering.turnOn("SW8")
+    lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=10)
+
+
