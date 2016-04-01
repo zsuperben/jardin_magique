@@ -40,7 +40,7 @@ app.conf.CELERYBEAT_SCHEDULE = {
         
         },
     "thatOtherLightOn":{
-        'task': 'tasks.lightup',
+        'task': 'tasks.lightUp',
         'schedule': crontab(hour=6, minute=5),
         'args': olight,
     },    
@@ -48,6 +48,11 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'task': 'tasks.lightOut',
         'schedule': crontab(hour=0, minute=0),
         'args': olight
+    },
+    'moveAirAround': {
+        'task': 'tasks.ventilation',
+        'schedule': timedelta(minutes=30),
+        'args': (),
     },
  
 }
@@ -127,3 +132,9 @@ def CalculAvg():
         return None
     
     return retdic    
+
+
+@app.task(base=CallbackTask)
+def ventilation():
+    watering.turnOff("SW9")
+    lightUp.apply_async(["SW9"], countdown=20)
