@@ -12,11 +12,15 @@ from config import load_config,is_allowed
 from measures.MeasureHandler import MeasureHandler
 from switchesManagement import SwitchHandler
 from videohandler import VideoHandler
-
-
+from arrosage import ArrosageHandler
+from fillup import RemplissageHandler
 from sys import path
 from os.path import realpath, dirname
 path.append(realpath(dirname(__file__)))
+
+#TODO add logging configuration to config module
+#TODO make server config out of config object 
+
 
 if __name__ == "__main__":
     opt, trash = getopt.getopt(args=sys.argv[1:],
@@ -60,6 +64,8 @@ if __name__ == "__main__":
             (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
             (r'/video/', VideoHandler),
+            (r'/arrosage/', ArrosageHandler),
+            (r'/remplir/', RemplissageHandler),
         ],
         {}
     )

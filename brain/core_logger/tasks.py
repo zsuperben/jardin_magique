@@ -2,6 +2,7 @@ from celery import Celery, Task
 import watering
 
 from datetime import timedelta
+import datetime
 from celery.schedules import crontab
 import logging
 
@@ -14,7 +15,18 @@ connection = MySQLdb.connect("localhost",
                              "ffsomg2016",
                              "jardin")
 
-logging.basicConfig(filename="/var/log/jardin/celery")
+#Setup Logger, to be moved in the configuration section:
+celerylogger = logging.getLogger('celery')
+logformat = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+fh = logging.FileHandler("/var/log/jardin/celery")
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(logformat)
+cons = logging.StreamHandler()
+cons.setLevel(logging.ERROR)
+cons.setFormatter(logformat)
+celerylogger.addHandler(cons)
+celerylogger.addHandler(fh)
+
 
 app = Celery()
 app.conf.CELERY_TIMEZONE = 'Europe/Paris'
@@ -51,14 +63,15 @@ app.conf.CELERYBEAT_SCHEDULE = {
     },
     'moveAirAround': {
         'task': 'tasks.ventilation',
-        'schedule': timedelta(minutes=30),
+        'schedule': crontab(minute=30),
         'args': (),
     },
     'PutWaterOnSeeds': {
         'task': 'tasks.arrosage',
-        'schedule': timedelta(hours=12),
+        'schedule': crontab(hour='16,10,0', minute=5),
         'args': (),
     },
+
  
 }
 
@@ -67,12 +80,12 @@ MIN_SOIL = 80
 
 class CallbackTask(Task):
     def on_success(self, retval, task_id, args, kwargs):
-        logging.info(
+        celerylogger.info(
             'Successfully ran %s' % str(task_id)
         )
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        logging.error(
+        celerylogger.error(
             'Failed to run %s' % str(task_id)
         )
 
@@ -99,13 +112,13 @@ def CheckForAction():
     WaterIsNeeded = False
     allAverages  = CalculAvg()
     if not allAverages:
-        logging.error("Can't tell if water is needed : no measures ")
+        celerylogger.error("Can't tell if water is needed : no measures ")
 
    
     for avg in allAverages:
         if allAverages[avg] <= MIN_SOIL:
             waterIsNeeded = True
-            logging.warning("Water is needed in zone : '%s' average is %d" % (avg))
+            celerylogger.warning("Water is needed in zone : '%s' average is %d" % (avg))
 
 
 
@@ -123,7 +136,7 @@ def CalculAvg():
             if l > 0:
                 measures = mycur.fetchall()
             else:
-                logging.warning("Can't get measures from yesterday : empty set.")
+                celerylogger.warning("Can't get measures from yesterday : empty set.")
                 continue
 
             avg = 0
@@ -133,7 +146,7 @@ def CalculAvg():
             retdic[table[0]] = avg
 
     else:
-        logging.warning("No measures detected at all.")
+        celerylogger.warning("No measures detected at all.")
         return None
     
     return retdic    
@@ -141,23 +154,25 @@ def CalculAvg():
 
 @app.task(base=CallbackTask)
 def ventilation():
-    logging.info("Ventilation on for 20 seconds")
+    celerylogger.info("Ventilation on for 20 seconds")
     watering.turnOff("SW9")
     lightUp.apply_async(["SW9"], countdown=20)
 
 
 @app.task(base=CallbackTask)
 def arrosage():
-    logging.warning("Turning on watering for two minutes")
+    celerylogger.warning("Turning on watering for two minutes")
     watering.turnOn("SW6")
-    lightOut.apply_async(["SW6"], countdown=20)
+    lightOut.apply_async(["SW6"], countdown=120)
 
 
 @app.task(base=CallbackTask)
 def remplissage_cuve():
-    logging.warning("Filling up the water tank on 1st floor")
+    celerylogger.warning("Filling up the water tank on 1st floor")
+    with open("/var/run/jardin/waterlvl", 'a') as f:
+        f.write(datetime.datetime.now().isoformat(sep=' '))
     watering.turnOn("SW4")
     watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=10)
+    lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=30)
 
 
