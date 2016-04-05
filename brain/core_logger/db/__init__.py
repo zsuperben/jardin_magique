@@ -1,8 +1,9 @@
 __author__ = 'zsb'
 import MySQLdb
 import MySQLdb.cursors
+import logging
 
-
+logger = logging.getLogger('api')
 
 def get_table_for_zone(con, zone):
     if type(con) is not MySQLdb.connections.Connection or type(zone) is not str:
@@ -11,10 +12,10 @@ def get_table_for_zone(con, zone):
     mycur =con.cursor(MySQLdb.cursors.DictCursor)
     try:
         if mycur.execute("DESCRIBE %s" %  zone) > 0:
-            print(mycur.fetchall())
+            logger.debug(mycur.fetchall())
             return True
         else:
-            print('False !!! ')
+            logger.error('No measure table found for %s ' % zone)
             return False
     except MySQLdb.ProgrammingError:
         return False
@@ -30,9 +31,9 @@ def set_table_for_zone(con, zone):
     `soil` int(16) NOT NULL,
     `temp` float(4,2),
     PRIMARY KEY (`time`)  )"""
-    print(req)
+    logger.debug(req)
     num = mycur.execute(req)
-    print(num)
+    logger.debug(num)
 
     con.commit()
 
@@ -64,6 +65,7 @@ def insert_dict_into_db(connection, table, data):
 
     # If all of the above checks are passed then we can pretty much dump the thing on the db
     gogetit = "INSERT INTO "+ table +' VALUES '+ my_values +';'
-    print(gogetit)
+    logger.debug(gogetit)
+    logger.warning('inserting %s into %s' %(data, table))
     r = mycur.execute(gogetit)
     connection.commit()

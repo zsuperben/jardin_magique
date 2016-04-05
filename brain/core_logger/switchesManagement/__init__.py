@@ -3,6 +3,9 @@ from tornado_json.requesthandlers import APIError, APIHandler
 from watering import gpio, switches, turnOn, turnOff
 from tasks import lightOut
 import json
+import logging
+
+logger = logging.getLogger('api')
 
 class SwitchHandler(APIHandler):
     def initialize(self):
@@ -36,10 +39,10 @@ class SwitchHandler(APIHandler):
     def post(self, *args, **kwargs):
         if self.request.body:
             try:
-                print(self.request.body)
+                logger.debug(self.request.body)
                 data = json.loads(self.request.body.decode('utf-8'))
             except ValueError:
-                print("Error parsing JSON")
+                logger.error("Error parsing JSON")
                 raise APIError(400)
         if data["switch"] not in switches.keys():
             raise APIError(status_code=404,log_message="Wrong switch argument..." )
@@ -62,11 +65,11 @@ class SwitchHandler(APIHandler):
                 data['switch'] = swurl
         except NameError:
             data['switch'] = json.loads(self.request.body.decode("utf-8"))["switch"]
-            print("I get sw = %s" % data['switch'])
+            logger.debug("I get sw = %s" % data['switch'])
         except Exception as e:
-            print(e)
+            logger.error(e)
             raise APIError(400)
-
+        logger.warning("Turning off %s" % data['switch'])
         turnOff(data['switch'])
         self.write('{"status":"OK", "code": 200, "switch": %s}' % data['switch'])
 

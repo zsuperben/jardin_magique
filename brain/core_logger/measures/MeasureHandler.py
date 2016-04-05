@@ -10,6 +10,8 @@ from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone
 from config import is_allowed
 import logging
 
+logger = logging.getLogger('api')
+
 class MeasureHandler(APIHandler):
     measure_schema = { "type":"object",
                    "properties":
@@ -27,11 +29,10 @@ class MeasureHandler(APIHandler):
         if not is_allowed(self.remote_ip, myconf):
             raise APIError(401)
 
-
     @schema.validate(input_schema=measure_schema)
     def post(self):
         data = {}
-        logging.info("New meqsure from %s" % self.remote_ip)
+        logger.info("New measure from %s" % self.remote_ip)
         try:
             #load JSON body
             data = json.loads(self.request.body.decode("utf-8"))
@@ -47,6 +48,6 @@ class MeasureHandler(APIHandler):
 
 
         except Exception as e:
-            print("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
+            logger.error("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
             raise APIError(400)
 

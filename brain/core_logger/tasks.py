@@ -162,6 +162,8 @@ def ventilation():
 @app.task(base=CallbackTask)
 def arrosage():
     celerylogger.warning("Turning on watering for two minutes")
+    with open("/var/run/jardin/arrosage", 'a') as f:
+        f.write(datetime.datetime.now().isoformat(sep=' '))
     watering.turnOn("SW6")
     lightOut.apply_async(["SW6"], countdown=120)
 

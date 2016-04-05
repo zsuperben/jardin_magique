@@ -1,8 +1,10 @@
 __author__ = 'zsb'
-#import ConfigParser
 from configparser import ConfigParser
 import os
 import netaddr
+import logging
+
+logger = logging.getLogger('api')
 
 def load_config(file='logger.conf'):
     if not os.path.isfile(file):
@@ -14,10 +16,23 @@ def load_config(file='logger.conf'):
         d[section] = {}
         for key, val in config.items(section):
             d[section][key] = val
+    try:
+        d[logging]
+        #TODO actually load config from file.
+    except KeyError:
+        #No specific logging config was given: setting up default values:
+        fh = logging.FileHandler('/var/log/jardin/api.log')
+        fh.setLevel(logging.DEBUG)
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.ERROR)
+        logger.addHandler(fh)
+        logger.addHandler(ch)
+
+
 
     try:
         if d['sensors']['host_list']:
-            print(d['sensors']['host_list'].split(' '))
+            logger.info(d['sensors']['host_list'].split(' '))
             d['sensors']['host_list'] = d['sensors']['host_list'].split(' ')
         else:
             raise KeyError("Incomplete config file !")
@@ -28,7 +43,7 @@ def load_config(file='logger.conf'):
         fh.close()
 
     except ( KeyError, IOError ) as e:
-        print(e)
+        logger.error(str(e))
         return None
 
     #building a list of valid ips
@@ -39,11 +54,11 @@ def load_config(file='logger.conf'):
             host = netaddr.IPNetwork(host)
             temp_list.append(host)
         except:
-            print("not a valid ip!")
+            logger.error("not a valid ip! %s" % host)
 
     d['sensors']['host_list'] = temp_list
-
-    print(d)
+    
+    logger.debug(str(d))
     return d
 
 def is_allowed(client, conf):
@@ -57,7 +72,7 @@ def is_allowed(client, conf):
         else:
             if host == 'localhost' and client == 'localhost':
                 allowed = True
-    print("Client is %s   and  hostlist is %s, Client is allowed : %s" %
+    logger.info("Client is %s   and  hostlist is %s, Client is allowed : %s" %
           ( client, conf['sensors']['host_list'], allowed )
           )
     return allowed
