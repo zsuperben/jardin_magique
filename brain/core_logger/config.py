@@ -22,6 +22,7 @@ def load_config(file='logger.conf'):
     except KeyError:
         #No specific logging config was given: setting up default values:
         fh = logging.FileHandler('/var/log/jardin/api.log')
+        fh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         fh.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.ERROR)

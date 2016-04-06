@@ -56,8 +56,8 @@ if __name__ == "__main__":
                                Conf['db']['password'],
                                Conf['db']['db'])
 
-
-
+    logger = logging.getLogger('api')
+    logger.info("Loading routes")
     toto = application.Application(
         [
             (r'/measure/', MeasureHandler, dict(connection=connection, Conf=Conf)),
@@ -70,6 +70,6 @@ if __name__ == "__main__":
         {}
     )
     toto.listen(8888)
+    logger.info("Server Starting...")
     ioloop.IOLoop.instance().start()
-
 
