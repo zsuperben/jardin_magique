@@ -68,12 +68,17 @@ app.conf.CELERYBEAT_SCHEDULE = {
     },
     'PutWaterOnSeeds': {
         'task': 'tasks.arrosage',
-        'schedule': crontab(hour='16,10,0', minute=5),
+        'schedule': crontab(hour='5', minute=5),
         'args': (),
     },
-
+    'fillup_tank': {
+        'task': 'remplissage_cuve', 
+        'schedule': crontab(hour=0, minute=5), 
+        'args': (),
+        },
  
 }
+
 
 MIN_SOIL = 80
 
