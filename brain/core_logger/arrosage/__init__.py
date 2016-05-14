@@ -20,7 +20,7 @@ class ArrosageHandler(APIHandler):
         data = {}
         data['code'] = 200
         data['status'] = 'OK'
-        data['duration'] = 30
+        data['duration'] = 120
         arrosage.apply_async([], countdowon=1)
         self.write(data)
 
