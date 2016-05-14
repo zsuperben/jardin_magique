@@ -12,7 +12,7 @@ from config import load_config,is_allowed
 from measures.MeasureHandler import MeasureHandler
 from switchesManagement import SwitchHandler
 from videohandler import VideoHandler
-from arrosage import ArrosageHandler
+from arrosage import ArrosageHandler, CarrottesHandler
 from fillup import RemplissageHandler
 from sys import path
 from os.path import realpath, dirname
@@ -66,6 +66,7 @@ if __name__ == "__main__":
             (r'/video/', VideoHandler),
             (r'/arrosage/', ArrosageHandler),
             (r'/remplir/', RemplissageHandler),
+            (r'/carrottes/', CarrottesHandler),
         ],
         {}
     )

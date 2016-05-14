@@ -6,9 +6,20 @@ import logging
 
 url = 'http://api.openweathermap.org/data/2.5/forecast/daily?lat=48.877338&lon=-0.483815&cnt=3&appid=d70b47c0b3a4d2bc343df3973dee2ed0&units=metric'
 
-logger = logging.getLogger('api')
+dico = {
+        "lat": 48.877338,
+        "lon": -0.483815,
+        "appid": 'd70b47c0b3a4d2bc343df3973dee2ed0', 
+        "units": "metric", 
+        "cnt": 3
+        }
 
-def getWeatherForecast():
+
+logger = logging.getLogger('api')
+# TODO Load location from config file.
+
+
+def getWeatherForecast(lat=48.877338, lon=-0.483815, appid='d70b47c0b3a4d2bc343df3973dee2ed0', cnt=3):
     try:
         res = requests.get(url)
         if res.ok:
@@ -31,7 +42,7 @@ def formatted(forecast):
 
     ret = "Tomorrow %s, the weather will be %s, average temperature should be around : %s degrees celcius." % (forecast['list'][1]['dt'], forecast['list'][1]['weather'][0]['main'], forecast['list'][1]['temp']['day'])
     logger.warning(ret)
-    print(ret)
     return ret
+
 
 
