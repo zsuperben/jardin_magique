@@ -160,15 +160,15 @@ def CalculAvg():
 @app.task(base=CallbackTask)
 def ventilation():
     celerylogger.info("Ventilation on for 20 seconds")
-    watering.turnOff("SW9")
-    lightUp.apply_async(["SW9"], countdown=20)
+    watering.turnOff("SW9") # strangely the relay board works inverted. This turns on 
+    lightUp.apply_async(["SW9"], countdown=20) # this turns off
 
 
 @app.task(base=CallbackTask)
 def arrosage():
-    celerylogger.warning("Turning on watering for two minutes")
+    celerylogger.warning("Turning on watering on seeds for two minutes")
     with open("/var/run/jardin/arrosage", 'a') as f:
-        f.write(datetime.datetime.now().isoformat(sep=' '))
+        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     watering.turnOn("SW6")
     lightOut.apply_async(["SW6"], countdown=120)
 
@@ -177,9 +177,20 @@ def arrosage():
 def remplissage_cuve():
     celerylogger.warning("Filling up the water tank on 1st floor")
     with open("/var/run/jardin/waterlvl", 'a') as f:
-        f.write(datetime.datetime.now().isoformat(sep=' '))
+        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     watering.turnOn("SW4")
     watering.turnOn("SW8")
     lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=30)
+
+@app.task(base=CallbackTask)
+def tomates():
+    celerylogger.warning("Watering tomatoes")
+    with open("/var/run/jardin/tomatoes", 'a') as f:
+        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
+    watering.turnOn("SW3")
+    watering.turnOn("SW8")
+    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=30)
+
+
 
 
