@@ -7,8 +7,11 @@ import logging
 logger = logging.getLogger('api')
 logger.error('Starting up video camera...')
 
-
 cam = cv2.VideoCapture(0)
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector( cv2.HOGDescriptor_getDefaultPeopleDetector() )
+
+
 
 class VideoHandler(RequestHandler):
     
