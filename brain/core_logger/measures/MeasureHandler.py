@@ -45,8 +45,6 @@ class MeasureHandler(APIHandler):
             insert_dict_into_db(self.dbc, table, data)
 
 
-
-
         except Exception as e:
             logger.error("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
             raise APIError(400)

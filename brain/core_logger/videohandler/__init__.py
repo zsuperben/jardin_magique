@@ -31,5 +31,4 @@ class VideoHandler(RequestHandler):
         self.set_header("Content-Type", "image/png")
         logger.error("Taking a picture and sending it to %s" % self.remote_ip)
         with open(self.fname, 'rb') as f:
-            [ self.write(f.read(1)) for x in range(os.path.getsize(self.fname)) ]
-
+            [self.write(f.read(1)) for x in range(os.path.getsize(self.fname))]

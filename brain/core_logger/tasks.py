@@ -91,7 +91,7 @@ class CallbackTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         celerylogger.error(
-            'Failed to run %s' % str(task_id)
+            'Failed to run %s with error : %s' % (str(task_id), einfo)
         )
 
 
@@ -189,8 +189,35 @@ def tomates():
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     watering.turnOn("SW3")
     watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=30)
+    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=300)
 
+@app.task(
+    base=CallbackTask
+)
+def ext_arrosage():
+    celerylogger.warning("Watering outside. for 5 minutes")
+    with open("/var/run/jardin/exterieur",a) as f:
+        f.write(datetime.datetime.now().isoformat(sep=" "))
+    watering.turnOn("SW2")
+    watering.turnOn("SW8")
+    lightOut.apply_async()
 
+# Startup Code !
+# check for status at startup. and turn on the lights if needed
+# What time is it ?
+now = datetime.datetime.now()
 
+# Do we need light then ?
+want_lite = False
+if now.hour > 5 and now.hour <= 23:
+    want_lite = True
 
+# Do we have light already ?
+have_light = False
+if bool(watering.readOne("SW5")) and bool(watering.readOne("SW7")):
+    have_light = True
+
+# Turns the light on if needed
+if want_lite and not have_light:
+    watering.turnOn("SW5")
+    watering.turnOn("SW7")
