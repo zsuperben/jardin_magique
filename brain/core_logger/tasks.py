@@ -76,6 +76,11 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'schedule': crontab(hour=0, minute=5), 
         'args': (),
         },
+    'tomates':{
+        'task': 'tomates',
+        'schedule': crontab(hour=8, minute=30),
+        'args': (),
+        },
  
 }
 
@@ -189,7 +194,7 @@ def tomates():
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     watering.turnOn("SW3")
     watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=300)
+    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=120)
 
 @app.task(
     base=CallbackTask
