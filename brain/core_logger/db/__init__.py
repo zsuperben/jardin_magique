@@ -58,6 +58,8 @@ def insert_dict_into_db(connection, table, data):
                 if column not in data.keys():
                     raise ValueError("dict <=> table mismatch")
                 else:
+                    if type(data[column]) is str:
+                        data[column] = '"' +data[column]  '"'
                     my_values = my_values + str(data[column] )+', '
             my_values = my_values[:-2] + ')'
     except MySQLdb.MySQLError:

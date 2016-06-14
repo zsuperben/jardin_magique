@@ -223,7 +223,7 @@ def ext_arrosage():
     with open("/var/run/jardin/exterieur",a) as f:
         f.write(datetime.datetime.now().isoformat(sep=" "))
         data = {}
-    data["type"] = "exterior"
+    data["type"] = 'exterior'
     data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
