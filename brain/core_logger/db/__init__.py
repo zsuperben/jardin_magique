@@ -67,5 +67,6 @@ def insert_dict_into_db(connection, table, data):
     gogetit = "INSERT INTO "+ table +' VALUES '+ my_values +';'
     logger.debug(gogetit)
     logger.warning('inserting %s into %s' %(data, table))
+    logger.warning(gogetit)
     r = mycur.execute(gogetit)
     connection.commit()
