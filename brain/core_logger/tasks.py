@@ -177,7 +177,7 @@ def arrosage():
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     data = {}
     data["type"] = "seeds"
-    data["time"] = datetime.datetime.now().isoformat(' ')
+    data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW6")
@@ -192,7 +192,7 @@ def remplissage_cuve():
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
         data = {}
     data["type"] = "remplissage_cuve"
-    data["time"] = datetime.datetime.now().isoformat(' ')
+    data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW4")
@@ -207,7 +207,7 @@ def tomates():
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
         data = {}
     data["type"] = "tomates"
-    data["time"] = datetime.datetime.now().isoformat(' ')
+    data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW3")
@@ -224,7 +224,7 @@ def ext_arrosage():
         f.write(datetime.datetime.now().isoformat(sep=" "))
         data = {}
     data["type"] = "exterior"
-    data["time"] = datetime.datetime.now().isoformat(' ')
+    data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW2")
