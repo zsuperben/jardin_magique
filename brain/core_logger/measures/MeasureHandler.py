@@ -38,7 +38,7 @@ class MeasureHandler(APIHandler):
             data = json.loads(self.request.body.decode("utf-8"))
             
             # add some sanity check some day
-            data["time"] = "'" + datetime.datetime.now().isoformat() + "'"
+            data["time"] =  datetime.datetime.now().isoformat()
             table = "mesure_tbl_" + str(data['zone'])
             if not get_table_for_zone(self.dbc, table):
                 set_table_for_zone(self.dbc, table)
