@@ -6,7 +6,7 @@ import datetime
 from celery.schedules import crontab
 import logging
 
-
+from db import insert_dict_into_db
 import MySQLdb
 
 
@@ -166,41 +166,65 @@ def ventilation():
 
 @app.task(base=CallbackTask)
 def arrosage():
+    duration = 120
     celerylogger.warning("Turning on watering on seeds for two minutes")
     with open("/var/run/jardin/arrosage", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
+    data = {}
+    data["type"] = "seeds"
+    data["time"] = datetime.datetime.now().isoformat(' ')
+    data['duration'] = duration
+    insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW6")
-    lightOut.apply_async(["SW6"], countdown=120)
+    lightOut.apply_async(["SW6"], countdown=duration)
 
 
 @app.task(base=CallbackTask)
 def remplissage_cuve():
+    duration = 30
     celerylogger.warning("Filling up the water tank on 1st floor")
     with open("/var/run/jardin/waterlvl", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
+        data = {}
+    data["type"] = "remplissage_cuve"
+    data["time"] = datetime.datetime.now().isoformat(' ')
+    data['duration'] = duration
+    insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW4")
     watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=30)
+    lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=duration)
 
 @app.task(base=CallbackTask)
 def tomates():
+    duration = 120
     celerylogger.warning("Watering tomatoes")
     with open("/var/run/jardin/tomatoes", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
+        data = {}
+    data["type"] = "seeds"
+    data["time"] = datetime.datetime.now().isoformat(' ')
+    data['duration'] = duration
+    insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW3")
     watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=300)
+    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=duration)
 
 @app.task(
     base=CallbackTask
 )
 def ext_arrosage():
+    duration = 120
     celerylogger.warning("Watering outside. for 5 minutes")
     with open("/var/run/jardin/exterieur",a) as f:
         f.write(datetime.datetime.now().isoformat(sep=" "))
+        data = {}
+    data["type"] = "seeds"
+    data["time"] = datetime.datetime.now().isoformat(' ')
+    data['duration'] = duration
+    insert_dict_into_db(connection, "events", data)
     watering.turnOn("SW2")
     watering.turnOn("SW8")
-    lightOut.apply_async()
+    lightOut.apply_async([ ["SW8", "SW2"] ], countdown=duration)
 
 # Startup Code !
 # check for status at startup. and turn on the lights if needed
