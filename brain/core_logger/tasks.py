@@ -76,6 +76,11 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'schedule': crontab(hour=0, minute=5), 
         'args': (),
         },
+    'tomates':{
+        'task': 'tomates',
+        'schedule': crontab(hour=8, minute=30),
+        'args': (),
+        },
  
 }
 
