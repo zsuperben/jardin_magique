@@ -206,7 +206,7 @@ def tomates():
     with open("/var/run/jardin/tomatoes", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
         data = {}
-    data["type"] = "seeds"
+    data["type"] = "tomates"
     data["time"] = datetime.datetime.now().isoformat(' ')
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
@@ -223,7 +223,7 @@ def ext_arrosage():
     with open("/var/run/jardin/exterieur",a) as f:
         f.write(datetime.datetime.now().isoformat(sep=" "))
         data = {}
-    data["type"] = "seeds"
+    data["type"] = "exterior"
     data["time"] = datetime.datetime.now().isoformat(' ')
     data['duration'] = duration
     insert_dict_into_db(connection, "events", data)
