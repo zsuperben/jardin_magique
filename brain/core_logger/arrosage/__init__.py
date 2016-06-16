@@ -1,8 +1,11 @@
 from tornado_json.requesthandlers import APIHandler, APIError
 from tasks import arrosage, tomates 
 from watering import switches, turnOn, turnOff
+from db import get_last
+import MySQLdb
 
-
+con = MySQLdb.connect("localhost", "celery", "ffsomg2016",
+                             "jardin")
 
 
 class ArrosageHandler(APIHandler):
@@ -11,7 +14,7 @@ class ArrosageHandler(APIHandler):
         self.set_header("Content-Type", "application/json")
         data['code'] = 200
         data['status'] = 'OK'
-        data['last'] = 'unknown' # todo get last time from DB
+        data['last'] = get_last(con, "seeds") # todo get last time from DB
         self.write(data)
 
 
@@ -31,7 +34,7 @@ class TomatesHandler(APIHandler):
         self.set_header("Content-Type", "application/json")
         data['code'] = 200
         data['status'] = 'OK'
-        data['last'] = 'unknown' # todo get last time from DB
+        data['last'] = get_last(con, "tomates") # todo get last time from DB
         self.write(data)
 
 
@@ -51,7 +54,7 @@ class CarrottesHandler(APIHandler):
         self.set_header("Content-Type","application/json")
         data['code'] = 200
         data['status'] = "ok"
-        data['last'] = 'unknown'
+        data['last'] = get_last(con, "exterior")
         self.write(data)
 
     def put(self, *args, **kwargs):

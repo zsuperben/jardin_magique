@@ -21,9 +21,7 @@ logger = logging.getLogger('api')
 
 def getWeatherForecast(lat=48.877338, lon=-0.483815, appid='d70b47c0b3a4d2bc343df3973dee2ed0', cnt=3):
     url = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&cnt=%d&appid=%s&units=metric" % (lat, lon, cnt, appid)
-    logger.debug(
-        "Weather module: calling : '%s'"% url
-    )
+    logger.debug("Weather module: calling : '%s'" % url)
     try:
         res = requests.get(url)
         if res.ok:

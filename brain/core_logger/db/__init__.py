@@ -72,3 +72,16 @@ def insert_dict_into_db(connection, table, data):
     logger.warning(gogetit)
     r = mycur.execute(gogetit)
     connection.commit()
+
+def get_last(connection, thing):
+    if type(connection) is not MySQLdb.connections.Connection or type(thing) is not str:
+        raise ValueError("Wrong arguments supplied.")
+    mycur = connection.cursor(MySQLdb.cursors.DictCursor)
+    if thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
+        raise ValueError("type not supported yet")
+    ret = mycur.execute("SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
+    if ret > 0:
+        return mycur.fetchall()
+    else:
+        return None
+
