@@ -6,7 +6,8 @@ from tornado_json import schema
 import json
 import datetime
 from  netaddr import IPNetwork
-from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone
+from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone, get_connection
+
 from config import is_allowed
 import logging
 
@@ -21,8 +22,8 @@ class MeasureHandler(APIHandler):
                           "plant": {"type":"number"}
                           }}
 
-    def initialize(self, connection=None, Conf=None):
-        self.dbc = connection
+    def initialize(self, Conf=None):
+        self.dbc = get_connection()
         myconf =  Conf
         x_real_ip = self.request.headers.get("X-Real-IP")
         self.remote_ip = x_real_ip or self.request.remote_ip
@@ -49,3 +50,5 @@ class MeasureHandler(APIHandler):
             logger.error("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
             raise APIError(400)
 
+    def on_finish():
+        self.dbc.close()

@@ -50,17 +50,11 @@ if __name__ == "__main__":
     if dbpassword is not '':
         Conf['db']['password'] = dbpassword
 
-
-    connection= MySQLdb.connect(Conf['db']['host'],
-                               Conf['db']['user'],
-                               Conf['db']['password'],
-                               Conf['db']['db'])
-
     logger = logging.getLogger('api')
     logger.info("Loading routes")
     toto = application.Application(
         [
-            (r'/measure/', MeasureHandler, dict(connection=connection, Conf=Conf)),
+            (r'/measure/', MeasureHandler, dict(Conf=Conf)),
             (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
             (r'/video/', VideoHandler),

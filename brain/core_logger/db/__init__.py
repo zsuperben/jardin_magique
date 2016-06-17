@@ -85,3 +85,6 @@ def get_last(connection, thing):
     else:
         return None
 
+def get_connection():
+    return MySQLdb.connect("localhost", "celery", "jardin2016", "jardin")
+

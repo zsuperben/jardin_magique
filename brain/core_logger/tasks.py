@@ -6,14 +6,9 @@ import datetime
 from celery.schedules import crontab
 import logging
 
-from db import insert_dict_into_db
+from db import insert_dict_into_db, get_connection
 import MySQLdb
 
-
-connection = MySQLdb.connect("localhost",
-                             "celery",
-                             "ffsomg2016",
-                             "jardin")
 
 #Setup Logger, to be moved in the configuration section:
 celerylogger = logging.getLogger('celery')
@@ -179,7 +174,9 @@ def arrosage():
     data["type"] = "seeds"
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
+    connection = get_connection()
     insert_dict_into_db(connection, "events", data)
+    connection.close()
     watering.turnOn("SW6")
     lightOut.apply_async(["SW6"], countdown=duration)
 
@@ -194,7 +191,9 @@ def remplissage_cuve():
     data["type"] = "remplissage_cuve"
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
+    connection = get_connection()
     insert_dict_into_db(connection, "events", data)
+    connection.close()
     watering.turnOn("SW4")
     watering.turnOn("SW8")
     lightOut.apply_async( [ ["SW8", "SW4"] ], countdown=duration)
@@ -209,7 +208,9 @@ def tomates():
     data["type"] = "tomates"
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
+    connection = get_connection()
     insert_dict_into_db(connection, "events", data)
+    connection.close()
     watering.turnOn("SW3")
     watering.turnOn("SW8")
     lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=duration)
@@ -226,7 +227,9 @@ def ext_arrosage():
     data["type"] = 'exterior'
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
+    connection = get_connection()
     insert_dict_into_db(connection, "events", data)
+    connection.close()
     watering.turnOn("SW2")
     watering.turnOn("SW8")
     lightOut.apply_async([ ["SW8", "SW2"] ], countdown=duration)
