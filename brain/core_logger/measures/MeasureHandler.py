@@ -50,5 +50,5 @@ class MeasureHandler(APIHandler):
             logger.error("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
             raise APIError(400)
 
-    def on_finish():
+    def on_finish(self):
         self.dbc.close()

@@ -67,13 +67,13 @@ app.conf.CELERYBEAT_SCHEDULE = {
         'args': (),
     },
     'fillup_tank': {
-        'task': 'remplissage_cuve', 
+        'task': 'tasks.remplissage_cuve', 
         'schedule': crontab(hour=0, minute=5), 
         'args': (),
         },
-    'tomates':{
-        'task': 'tomates',
-        'schedule': crontab(hour=8, minute=30),
+    'totoes':{
+        'task': 'tasks.tomates',
+        'schedule': crontab(hour=8, minute=6),
         'args': (),
         },
  
