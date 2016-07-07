@@ -241,7 +241,7 @@ now = datetime.datetime.now()
 
 # Do we need light then ?
 want_lite = False
-if now.hour > 5 and now.hour <= 23:
+if now.hour > 9 and now.hour <= 21:
     want_lite = True
 
 # Do we have light already ?
