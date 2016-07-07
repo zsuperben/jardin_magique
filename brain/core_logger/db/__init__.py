@@ -88,3 +88,13 @@ def get_last(connection, thing):
 def get_connection():
     return MySQLdb.connect("localhost", "celery", "jardin2016", "jardin")
 
+def get_duration(name):
+    if type(name) is not str:
+        raise ValueError("Get duraiton uses string as an input")
+    con = get_connection()
+    cur = con.cursor()
+    r = cur.execute("SELECT duration FROM durations WHERE type=%s" % name)
+    if r>0:
+        return cur.fetchone()
+    else:
+        return None
