@@ -6,7 +6,7 @@ import datetime
 from celery.schedules import crontab
 import logging
 
-from db import insert_dict_into_db, get_connection
+from db import insert_dict_into_db, get_connection, get_duration
 import MySQLdb
 
 
@@ -166,7 +166,7 @@ def ventilation():
 
 @app.task(base=CallbackTask)
 def arrosage():
-    duration = 120
+    duration = get_duration("seeds")
     celerylogger.warning("Turning on watering on seeds for two minutes")
     with open("/var/run/jardin/arrosage", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
@@ -183,7 +183,7 @@ def arrosage():
 
 @app.task(base=CallbackTask)
 def remplissage_cuve():
-    duration = 30
+    duration = get_duration("remplir")
     celerylogger.warning("Filling up the water tank on 1st floor")
     with open("/var/run/jardin/waterlvl", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
@@ -200,7 +200,7 @@ def remplissage_cuve():
 
 @app.task(base=CallbackTask)
 def tomates():
-    duration = 120
+    duration = get_duration("tomates")
     celerylogger.warning("Watering tomatoes")
     with open("/var/run/jardin/tomatoes", 'a') as f:
         f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
@@ -219,7 +219,7 @@ def tomates():
     base=CallbackTask
 )
 def ext_arrosage():
-    duration = 120
+    duration = get_duration("exter")
     celerylogger.warning("Watering outside. for 5 minutes")
     with open("/var/run/jardin/exterieur",a) as f:
         f.write(datetime.datetime.now().isoformat(sep=" "))
