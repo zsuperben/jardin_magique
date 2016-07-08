@@ -37,23 +37,23 @@ olight.append("SW5")
 app.conf.CELERYBEAT_SCHEDULE = {
     'TurnOffTheLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=0, minute=0),
+        'schedule': crontab(hour=21, minute=0),
         'args': light
     },
     "Switchiton": {
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=6, minute=0),
+        'schedule': crontab(hour=9, minute=0),
         'args': light
         
         },
     "thatOtherLightOn":{
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=6, minute=5),
+        'schedule': crontab(hour=9, minute=5),
         'args': olight,
     },    
     'TurnOffTheoLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=0, minute=0),
+        'schedule': crontab(hour=21, minute=0),
         'args': olight
     },
     'moveAirAround': {
