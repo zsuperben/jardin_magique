@@ -86,7 +86,7 @@ def get_last(connection, thing):
         return None
 
 def get_connection():
-    return MySQLdb.connect("localhost", "celery", "jardin2016", "jardin")
+    return MySQLdb.connect("localhost", "celery", "ffsomg2016", "jardin")
 
 def get_duration(name):
     if type(name) is not str:
