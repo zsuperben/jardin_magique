@@ -19,7 +19,7 @@ logger = logging.getLogger('api')
 # TODO Load location from config file.
 
 
-def getWeatherForecast(lat=48.877338, lon=-0.483815, appid='d70b47c0b3a4d2bc343df3973dee2ed0', cnt=3):
+def getWeatherForecast(lat=48.877338, lon=-0.483815, appid='d70b47c0b3a4d2bc343df3973dee2ed0', cnt=3, *args, **kwargs):
     url = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&cnt=%d&appid=%s&units=metric" % (lat, lon, cnt, appid)
     logger.debug("Weather module: calling : '%s'" % url)
     try:
@@ -47,4 +47,6 @@ def formatted(forecast):
     return ret
 
 
-
+if __name__ == "__main__":
+    logger = logging.getLogger()
+    print(formatted(getWeatherForecast(**dico)))

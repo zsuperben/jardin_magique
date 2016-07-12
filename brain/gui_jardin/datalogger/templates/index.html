@@ -1,0 +1,9 @@
+{{ extends base.html }}
+<div>
+    <p>Last events :</p>
+    <table>
+    {% for e in events %}
+        <tr><td>e.time</td><td>e.type</td></tr>
+    {% end for %}
+    </table>
+</div>

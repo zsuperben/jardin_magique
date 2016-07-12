@@ -1,6 +1,6 @@
 Django et python
 ================
-- ajouter les formulaires de mesures
+- ajouter les formulaires de  mesures
 - ajouter le CSS 
 - ajouter les images
 - rechercher la facon de faire un démon
@@ -23,9 +23,4 @@ faire marcher une photo resistance
 détecter le crash d'un arduino et le rebooter
     -> GPIO sur la cubieboard
     -> relais ou trasistors pour l'alim
-
-
-
-
-
 
