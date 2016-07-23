@@ -50,7 +50,7 @@ def insert_dict_into_db(connection, table, data):
         ret = mycur.execute("DESCRIBE %s ;" % table)
         if ret > 0:
             table_schema = mycur.fetchall()
-            list_db =[]
+            list_db = []
             my_values = '('
             for item in table_schema:
                 list_db.append(item['Field'])
@@ -70,7 +70,11 @@ def insert_dict_into_db(connection, table, data):
     logger.debug(gogetit)
     logger.warning('inserting %s into %s' %(data, table))
     logger.warning(gogetit)
-    r = mycur.execute(gogetit)
+    try:
+        r = mycur.execute(gogetit)
+    except Exception:
+        logger.error('SQL FAILED: '+ gogetit)
+        raise
     connection.commit()
 
 def get_last(connection, thing):
