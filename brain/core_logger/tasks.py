@@ -6,7 +6,7 @@ import datetime
 from celery.schedules import crontab
 import logging
 
-from db import insert_dict_into_db, get_connection, get_duration
+from db import insert_dict_into_db, get_connection, get_duration, executeSQL
 import MySQLdb
 
 
@@ -137,12 +137,12 @@ def CalculAvg():
     retdic = {}
     yesterday = datetime.datetime.now() - timedelta(days=1)
     mycur = connection.cursor()
-    ntbl= mycur.execute("SHOW TABLES LIKE 'mesure_tbl_%'")
+    ntbl= executeSQL(mycur, "SHOW TABLES LIKE 'mesure_tbl_%'")
     if ntbl >0:
         tables = mycur.fetchall()
         for table in tables:
             req = "SELECT soil FROM `" + table[0] + "` WHERE  `time` >= '%s' " % yesterday.isoformat()
-            l = mycur.execute(req)
+            l = executeSQL(mycur, req)
             if l > 0:
                 measures = mycur.fetchall()
             else:
@@ -247,13 +247,13 @@ def ext_arrosage():
 def check_mesure():
     con = get_connection()
     cur = con.cursor()
-    r = cur.execute("SHOW TABLES WHERE Tables_in_jardin LIKE 'mesure_tbl_%' ;")
+    r = executeSQL(cur, "SHOW TABLES WHERE Tables_in_jardin LIKE 'mesure_tbl_%' ;")
     if r > 0:
         celerylogger.debug("Ya des tables de mesures, c'est deja pas mal")
         mestables = cur.fetchall()
         for table in mestables:
             celerylogger.debug("JE me fais la table : %s" % table[0])
-            r = cur.execute("SELECT time FROM `%s` ORDER BY `time` DESC LIMIT 1" % table[0])
+            r = executeSQL(cur, "SELECT time FROM `%s` ORDER BY `time` DESC LIMIT 1" % table[0])
             if r > 0:
                 celerylogger.debug("tiens un t ")
                 t = cur.fetchone()[0]

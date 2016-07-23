@@ -5,13 +5,20 @@ import logging
 
 logger = logging.getLogger('api')
 
+def executeSQL(cursor, statement):
+    try:
+        return cursor.execute(statement)
+    except Exception:
+        logger.error('SQL FAILED: ' + statement)
+        raise
+
 def get_table_for_zone(con, zone):
     if type(con) is not MySQLdb.connections.Connection or type(zone) is not str:
         raise ValueError('Non biloute c\'est pas une connection')
 
     mycur =con.cursor(MySQLdb.cursors.DictCursor)
     try:
-        if mycur.execute("DESCRIBE %s" %  zone) > 0:
+        if executeSQL(mycur, "DESCRIBE %s" %  zone) > 0:
             logger.debug(mycur.fetchall())
             return True
         else:
@@ -32,7 +39,7 @@ def set_table_for_zone(con, zone):
     `temp` float(4,2),
     PRIMARY KEY (`time`)  )"""
     logger.debug(req)
-    num = mycur.execute(req)
+    num = executeSQL(mycur, req)
     logger.debug(num)
 
     con.commit()
@@ -47,7 +54,7 @@ def insert_dict_into_db(connection, table, data):
         raise ValueError("table has to be a string")
     mycur = connection.cursor(MySQLdb.cursors.DictCursor)
     try:
-        ret = mycur.execute("DESCRIBE %s ;" % table)
+        ret = executeSQL(mycur, "DESCRIBE %s ;" % table)
         if ret > 0:
             table_schema = mycur.fetchall()
             list_db = []
@@ -70,11 +77,7 @@ def insert_dict_into_db(connection, table, data):
     logger.debug(gogetit)
     logger.warning('inserting %s into %s' %(data, table))
     logger.warning(gogetit)
-    try:
-        r = mycur.execute(gogetit)
-    except Exception:
-        logger.error('SQL FAILED: '+ gogetit)
-        raise
+    r = executeSQL(mycur, gogetit)
     connection.commit()
 
 def get_last(connection, thing):
@@ -83,7 +86,7 @@ def get_last(connection, thing):
     mycur = connection.cursor(MySQLdb.cursors.DictCursor)
     if thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
         raise ValueError("type not supported yet")
-    ret = mycur.execute("SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
+    ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
     if ret > 0:
         return mycur.fetchall()
     else:
@@ -97,7 +100,7 @@ def get_duration(name):
         raise ValueError("Get duraiton uses string as an input")
     con = get_connection()
     cur = con.cursor()
-    r = cur.execute("SELECT duration FROM durations WHERE type='%s'" % name)
+    r = executeSQL(cur, "SELECT duration FROM durations WHERE type='%s'" % name)
     if r>0:
         return cur.fetchone()[0]
     else:
