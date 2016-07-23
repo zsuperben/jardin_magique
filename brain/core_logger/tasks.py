@@ -237,6 +237,35 @@ def ext_arrosage():
     watering.turnOn("SW8")
     lightOut.apply_async([ ["SW8", "SW2"] ], countdown=duration)
 
+
+@app.task(base=Callbacktask)
+def check_mesure():
+    con = get_connection()
+    cur = con.cursor()
+    r = cur.execute("SHOW TABLE LIKE `mesure_table_%`")
+    if r > 0:
+        logger.debug("Ya des tables de mesures, c'est deja pas mal")
+        mestables = cur.fetchall()
+        for table in mestables:
+            logger.debug("JE me fais la table : %s" % table[0])
+            r = cur.execute("SELECT time FROM `%s` LIMIT 1 ORDER BY `time` DESC" % table[0])
+            if r > 0:
+                logger.debug("tiens un t ")
+                t = cur.fetchone()[0]
+                logger.debug("Au debut t etait egal a : %s" % t) 
+                t = datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S")
+                logger.debug("Apres c'etait ca : %s " % t )
+                logger.debug("Et puis on s'est dit que ca pourrait etre ca : %d" % int(t.strftime("%s")))
+                if time.time() - int(t.stftime("%s")) > 15*60:
+                    logger.error("C'est la merde l'arduino %s a plante" % table[0][-1])
+                    # INSERt CODE TO RESTART 
+
+
+    else:
+        return False
+
+
+
 # Startup Code !
 # check for status at startup. and turn on the lights if needed
 # What time is it ?
@@ -256,3 +285,8 @@ if bool(watering.readOne("SW5")) and bool(watering.readOne("SW7")):
 if want_lite and not have_light:
     watering.turnOn("SW5")
     watering.turnOn("SW7")
+
+
+
+
+
