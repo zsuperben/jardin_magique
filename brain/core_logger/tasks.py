@@ -253,18 +253,26 @@ def check_mesure():
         mestables = cur.fetchall()
         for table in mestables:
             celerylogger.debug("JE me fais la table : %s" % table[0])
-            r = cur.execute("SELECT time FROM `%s` LIMIT 1 ORDER BY `time` DESC" % table[0])
+            r = cur.execute("SELECT time FROM `%s` ORDER BY `time` DESC LIMIT 1" % table[0])
             if r > 0:
                 celerylogger.debug("tiens un t ")
                 t = cur.fetchone()[0]
                 celerylogger.debug("Au debut t etait egal a : %s" % t) 
-                t = datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S")
+                delta = datetime.datetime.now() - t
+                limit = datetime.timedelta(minutes=15)
                 celerylogger.debug("Apres c'etait ca : %s " % t )
                 celerylogger.debug("Et puis on s'est dit que ca pourrait etre ca : %d" % int(t.strftime("%s")))
-                if time.time() - int(t.stftime("%s")) > 15*60:
+                if delta > limit:
                     celerylogger.error("C'est la merde l'arduino %s a plante" % table[0][-1])
+                    watering.turnOn("SW13")
+                    lightOut.apply_async(["SW13" ], countdown=10)
+                    data = {"type": "reboot_sensor", "time": datetime.datetime.now().isoformat(), "duration": 10}
+                    insert_dict_into_db(con, "events", data)
                     # INSERt CODE TO RESTART 
-
+                    return False
+                else:
+                    celerylogger.info("Alright we are on time on measures.")
+                    return True
 
     else:
         return False
