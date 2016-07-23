@@ -2,6 +2,7 @@ from tornado_json.requesthandlers import APIHandler, APIError
 from tasks import remplissage_cuve
 from watering import switches, turnOn, turnOff
 from os.path import isfile
+from db import get_connection, get_last
 
 
 class RemplissageHandler(APIHandler):
@@ -22,7 +23,8 @@ class RemplissageHandler(APIHandler):
                 line = 'unknown-blanck'
             data['last'] = unicode(line)
         except IOError:
-            data['last'] = 'unknown' # todo get last time from DB
+            con = get_connection()
+            data['last'] = get_last(con, "remplir")
         self.write(data)
 
 

@@ -16,6 +16,7 @@ from arrosage import ArrosageHandler, TomatesHandler, CarrottesHandler
 from fillup import RemplissageHandler
 from sys import path
 from os.path import realpath, dirname
+from dochandler import DocHandler
 path.append(realpath(dirname(__file__)))
 
 #TODO add logging configuration to config module
@@ -62,6 +63,7 @@ if __name__ == "__main__":
             (r'/tomates/', TomatesHandler),
             (r'/remplir/', RemplissageHandler),
             (r'/carrottes/', CarrottesHandler),
+            (r'/doc/', DocHandler),
         ],
         {}
     )
