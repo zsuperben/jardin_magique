@@ -243,7 +243,7 @@ def ext_arrosage():
     lightOut.apply_async([ ["SW8", "SW2"] ], countdown=duration)
 
 
-@app.task(base=Callbacktask)
+@app.task(base=CallbackTask)
 def check_mesure():
     con = get_connection()
     cur = con.cursor()
