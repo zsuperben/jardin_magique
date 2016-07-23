@@ -249,20 +249,20 @@ def check_mesure():
     cur = con.cursor()
     r = cur.execute("SHOW TABLES WHERE Tables_in_jardin LIKE 'mesure_tbl_%' ;")
     if r > 0:
-        logger.debug("Ya des tables de mesures, c'est deja pas mal")
+        celerylogger.debug("Ya des tables de mesures, c'est deja pas mal")
         mestables = cur.fetchall()
         for table in mestables:
-            logger.debug("JE me fais la table : %s" % table[0])
+            celerylogger.debug("JE me fais la table : %s" % table[0])
             r = cur.execute("SELECT time FROM `%s` LIMIT 1 ORDER BY `time` DESC" % table[0])
             if r > 0:
-                logger.debug("tiens un t ")
+                celerylogger.debug("tiens un t ")
                 t = cur.fetchone()[0]
-                logger.debug("Au debut t etait egal a : %s" % t) 
+                celerylogger.debug("Au debut t etait egal a : %s" % t) 
                 t = datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S")
-                logger.debug("Apres c'etait ca : %s " % t )
-                logger.debug("Et puis on s'est dit que ca pourrait etre ca : %d" % int(t.strftime("%s")))
+                celerylogger.debug("Apres c'etait ca : %s " % t )
+                celerylogger.debug("Et puis on s'est dit que ca pourrait etre ca : %d" % int(t.strftime("%s")))
                 if time.time() - int(t.stftime("%s")) > 15*60:
-                    logger.error("C'est la merde l'arduino %s a plante" % table[0][-1])
+                    celerylogger.error("C'est la merde l'arduino %s a plante" % table[0][-1])
                     # INSERt CODE TO RESTART 
 
 
