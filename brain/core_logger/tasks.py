@@ -37,23 +37,23 @@ olight.append("SW5")
 app.conf.CELERYBEAT_SCHEDULE = {
     'TurnOffTheLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=21, minute=0),
+        'schedule': crontab(hour=9, minute=0),
         'args': light
     },
     "Switchiton": {
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=9, minute=0),
+        'schedule': crontab(hour=15, minute=0),
         'args': light
         
         },
     "thatOtherLightOn":{
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=9, minute=5),
+        'schedule': crontab(hour=15, minute=5),
         'args': olight,
     },    
     'TurnOffTheoLight': {
         'task': 'tasks.lightOut',
-        'schedule': crontab(hour=21, minute=0),
+        'schedule': crontab(hour=9, minute=0),
         'args': olight
     },
     'moveAirAround': {
@@ -68,7 +68,7 @@ app.conf.CELERYBEAT_SCHEDULE = {
     },
     'fillup_tank': {
         'task': 'tasks.remplissage_cuve', 
-        'schedule': crontab(hour=0, minute=5, day_of_week=[3,5]), 
+        'schedule': crontab(hour=0, minute=5, day_of_week=5), 
         'args': (),
         },
     'totoes':{
@@ -175,7 +175,10 @@ def arrosage():
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
     connection = get_connection()
-    insert_dict_into_db(connection, "events", data)
+    try:
+        insert_dict_into_db(connection, "events", data)
+    except:
+        pass
     connection.close()
     watering.turnOn("SW6")
     lightOut.apply_async(["SW6"], countdown=duration)
@@ -240,9 +243,9 @@ def ext_arrosage():
 now = datetime.datetime.now()
 
 # Do we need light then ?
-want_lite = False
-if now.hour > 9 and now.hour <= 21:
-    want_lite = True
+want_lite = True
+if now.hour >= 9 and now.hour < 15:
+    want_lite = False
 
 # Do we have light already ?
 have_light = False

@@ -93,8 +93,8 @@ def get_duration(name):
         raise ValueError("Get duraiton uses string as an input")
     con = get_connection()
     cur = con.cursor()
-    r = cur.execute("SELECT duration FROM durations WHERE type=%s" % name)
+    r = cur.execute("SELECT duration FROM durations WHERE type='%s'" % name)
     if r>0:
-        return cur.fetchone()
+        return cur.fetchone()[0]
     else:
         return None
