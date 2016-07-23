@@ -1,6 +1,8 @@
+from tornado_json.requesthandlers import APIHandler
+
 class DocHandler(APIHandler):
 
-    def get():
+    def get(self):
         helper = '''
         This is a short doc to the API :
         Used URLS are :             (r'/measure/', MeasureHandler, dict(Conf=Conf)),

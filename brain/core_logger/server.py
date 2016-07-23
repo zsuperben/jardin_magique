@@ -18,7 +18,7 @@ from sys import path
 from os.path import realpath, dirname
 from dochandler import DocHandler
 path.append(realpath(dirname(__file__)))
-
+import alerter
 #TODO add logging configuration to config module
 #TODO make server config out of config object 
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if configfile is not '':
         Conf = load_config(configfile)
     else:
-        Conf = load_config("/etc/jardin/logger.conf")
+        Conf = load_config("./logger.conf")
 
     if not Conf:
         sys.stderr.write("Invalid config file.")
