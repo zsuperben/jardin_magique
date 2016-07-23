@@ -1,5 +1,5 @@
 import logging
-import smtp
+import smtplib
 from email.mime.text import MIMEText
 
 _alertsConf = None
