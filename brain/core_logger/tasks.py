@@ -247,7 +247,7 @@ def ext_arrosage():
 def check_mesure():
     con = get_connection()
     cur = con.cursor()
-    r = cur.execute("SHOW TABLE LIKE `mesure_table_%`")
+    r = cur.execute("SHOW TABLES WHERE Tables_in_jardin LIKE 'mesure_tbl_%' ;")
     if r > 0:
         logger.debug("Ya des tables de mesures, c'est deja pas mal")
         mestables = cur.fetchall()

@@ -14,4 +14,4 @@ class IndexView(TemplateView):
             return None
 
     def get(self, request, *args, **kwargs):
-        return render_to_response(request, template_name="index.html",{"title": "Welcome to the Djangle !", "events": self.get_events()} )
+        return render_to_response(request, template_name="index.html", dictionary={"title": "Welcome to the Djangle !", "events": self.get_events()} )
