@@ -78,7 +78,7 @@ app.conf.CELERYBEAT_SCHEDULE = {
         },
     "CheckMesure": {
         'task': 'tasks.check_mesure',
-        'schedule': crontab(hour=0, minute=15),
+        'schedule': crontab(minute='*/15'),
         'args': ()
         },
  
