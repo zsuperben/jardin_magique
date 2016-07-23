@@ -68,8 +68,8 @@ def load_config(file='logger.conf'):
                 d['alerts']['to'] = []
             else:
                 d['alerts']['to'] = [d['alerts']['to']]
-    except KeyError:
-        logger.error('invalid alerts section in configuration')
+    except KeyError as e:
+        logger.error('invalid alerts section in configuration: %s' % e)
         return None
     
     logger.debug(str(d))
