@@ -1,9 +1,9 @@
-import logger
+import logging
 import smtp
 from email.mime.text import MIMEText
 
 _alertsConf = None
-l = logger.getLogger('api')
+logger = logging.getLogger('api')
 
 def init(conf):
     global _alertsConf
