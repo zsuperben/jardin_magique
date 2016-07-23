@@ -58,6 +58,19 @@ def load_config(file='logger.conf'):
             logger.error("not a valid ip! %s" % host)
 
     d['sensors']['host_list'] = temp_list
+
+    try:
+        d['alerts']['mail']
+
+        # Ensure d[alerts][to] is a list
+        if type(d['alerts']['to']) is str:
+            if d['alerts']['to'] == '':
+                d['alerts']['to'] = []
+            else:
+                d['alerts']['to'] = [d['alerts']['to']]
+    except KeyError:
+        logger.error('invalid alerts section in configuration')
+        return None
     
     logger.debug(str(d))
     return d

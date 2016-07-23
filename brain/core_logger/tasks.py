@@ -9,6 +9,8 @@ import logging
 from db import insert_dict_into_db, get_connection, get_duration, executeSQL
 import MySQLdb
 
+import alerter
+
 
 #Setup Logger, to be moved in the configuration section:
 celerylogger = logging.getLogger('celery')
@@ -268,6 +270,7 @@ def check_mesure():
                     lightOut.apply_async(["SW13" ], countdown=10)
                     data = {"type": "reboot_sensor", "time": datetime.datetime.now().isoformat(), "duration": 10}
                     insert_dict_into_db(con, "events", data)
+                    alerter.alert("l'arduino ne marche plus, je le reboot")
                     # INSERt CODE TO RESTART 
                     return False
                 else:
