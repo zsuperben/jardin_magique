@@ -20,7 +20,7 @@ def sendMail(msg):
     msg = MIMEText('Le jardin magique est dans les choux: ' + msg)
     msg['Subject'] = 'Alerte du jardin magique'
     msg['From'] = _alertsConf['from']
-    msg['To'] = ', '.join(_alertsConf['to']
+    msg['To'] = ', '.join(_alertsConf['to'])
     smtp = smtplib.SMTP('localhost')
     smtp.sendmail(_alertsConf['from'], _alertsConf['to'], msg.as_string())
     smtp.quit()
