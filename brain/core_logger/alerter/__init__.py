@@ -1,13 +1,15 @@
 import logging
 import smtplib
 from email.mime.text import MIMEText
+from config import load_config
 
 _alertsConf = None
 logger = logging.getLogger('api')
+init()
 
-def init(conf):
+def init():
     global _alertsConf
-    _alertsConf = conf['alerts']
+    _alertsConf = load_config()['alerts']
 
 def alert(msg):
     if _alertsConf['mail'] == 'yes':

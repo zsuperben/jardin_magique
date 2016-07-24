@@ -54,8 +54,6 @@ if __name__ == "__main__":
     if dbpassword is not '':
         Conf['db']['password'] = dbpassword
 
-    alerter.init(Conf)
-
     logger = logging.getLogger('api')
     logger.info("Loading routes")
     toto = application.Application(
