@@ -139,7 +139,7 @@ def CalculAvg():
     retdic = {}
     yesterday = datetime.datetime.now() - timedelta(days=1)
     mycur = connection.cursor()
-    ntbl= executeSQL(mycur, "SHOW TABLES LIKE 'mesure_tbl_%'")
+    ntbl = executeSQL(mycur, "SHOW TABLES LIKE 'mesure_tbl_%'")
     if ntbl >0:
         tables = mycur.fetchall()
         for table in tables:
@@ -219,9 +219,7 @@ def tomates():
     watering.turnOn("SW8")
     lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=duration)
 
-@app.task(
-    base=CallbackTask
-)
+@app.task(base=CallbackTask)
 def ext_arrosage():
     duration = get_duration("exter")
     celerylogger.warning("Watering outside. for 5 minutes")
