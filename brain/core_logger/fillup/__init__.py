@@ -6,9 +6,6 @@ from db import get_connection, get_last
 
 
 class RemplissageHandler(APIHandler):
-    def initialize(self):
-        if not isfile('/var/run/jardin/waterlvl'):
-            open('/var/run/jardin/waterlvl', 'w')
 
     def get(self):
         data = {}
@@ -16,7 +13,6 @@ class RemplissageHandler(APIHandler):
         data['code'] = 200
         data['status'] = 'OK'
         try:
-            f = open('/var/run/jardin/waterlvl')
             for line in f:
                 pass
             if line == '':

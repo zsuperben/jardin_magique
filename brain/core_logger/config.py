@@ -63,11 +63,7 @@ def load_config(file='logger.conf'):
         d['alerts']['mail']
 
         # Ensure d[alerts][to] is a list
-        if type(d['alerts']['to']) is str:
-            if d['alerts']['to'] == '':
-                d['alerts']['to'] = []
-            else:
-                d['alerts']['to'] = [d['alerts']['to']]
+        d['alerts']['to'] = d['alerts']['to'].split(' ')
     except KeyError as e:
         logger.error('invalid alerts section in configuration: %s' % e)
         return None

@@ -9,7 +9,7 @@ import MySQLdb
 
 from config import load_config,is_allowed
 
-from measures.MeasureHandler import MeasureHandler
+from measures.MeasureHandler import MeasureHandler, wateralert
 from switchesManagement import SwitchHandler
 from videohandler import VideoHandler
 from arrosage import ArrosageHandler, TomatesHandler, CarrottesHandler
@@ -21,6 +21,9 @@ path.append(realpath(dirname(__file__)))
 import alerter
 #TODO add logging configuration to config module
 #TODO make server config out of config object 
+
+
+
 
 
 if __name__ == "__main__":
@@ -58,6 +61,7 @@ if __name__ == "__main__":
     toto = application.Application(
         [
             (r'/measure/', MeasureHandler, dict(Conf=Conf)),
+            (r'/wateralert/', wateralert),
             (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
             (r'/video/', VideoHandler),

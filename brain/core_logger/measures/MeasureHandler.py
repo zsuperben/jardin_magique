@@ -1,6 +1,6 @@
 __author__ = 'zsb'
 import sys
-
+import alerter
 from tornado_json.requesthandlers import APIError, APIHandler
 from tornado_json import schema
 import json
@@ -48,7 +48,36 @@ class MeasureHandler(APIHandler):
 
         except Exception as e:
             logger.error("An exception has occured of type : %s, \nIt says : \n%s" % (type(e),e))
-            raise APIError(400)
+            raise APIError(500)
 
     def on_finish(self):
         self.dbc.close()
+
+
+lastmail = datetime.datetime.now() - datetime.timedelta(days=1)
+etat = 'Unknown'
+class wateralert(APIHandler):
+    def get(self):
+        self.write({'lastmail': lastmail,'etat': etat })
+
+    def post(self):
+        # todo lire JSON
+        global lastmail, etat
+        oldstate = etat
+
+        try:
+            data = json.loads(self.request.body.decode("utf-8"))
+            logger.warning(self.request.body.decode("utf-8"))
+            etat = data['etat']
+        
+            if etat != oldstate or datetime.datetime.now() - lastmail > datetime.timedelta(days=1):
+                s = "l'eau est %s" % "pleine" if etat else "pas pleine" 
+                alerter.alert(s)
+                logger.error("mail envoye : %s" % s )
+                lastmail = datetime.datetime.now()
+            else:
+                logger.warning("l'eau est %s" % "pleine" if etat else "pas pleine")
+        except Exception as e:
+            logger.error("Shit happens : %s" % e)
+            raise APIError(500)
+

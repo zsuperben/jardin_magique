@@ -175,8 +175,6 @@ def ventilation():
 def arrosage():
     duration = get_duration("seeds")
     celerylogger.warning("Turning on watering on seeds for two minutes")
-    with open("/var/run/jardin/arrosage", 'a') as f:
-        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
     data = {}
     data["type"] = "seeds"
     data["time"] =  datetime.datetime.now().isoformat()
@@ -195,9 +193,7 @@ def arrosage():
 def remplissage_cuve():
     duration = get_duration("remplir")
     celerylogger.warning("Filling up the water tank on 1st floor")
-    with open("/var/run/jardin/waterlvl", 'a') as f:
-        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
-        data = {}
+    data = {}
     data["type"] = "remplissage_cuve"
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
@@ -212,9 +208,7 @@ def remplissage_cuve():
 def tomates():
     duration = get_duration("tomates")
     celerylogger.warning("Watering tomatoes")
-    with open("/var/run/jardin/tomatoes", 'a') as f:
-        f.write(datetime.datetime.now().isoformat(sep=' ') + '\n')
-        data = {}
+    data = {}
     data["type"] = "tomates"
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
@@ -231,9 +225,7 @@ def tomates():
 def ext_arrosage():
     duration = get_duration("exter")
     celerylogger.warning("Watering outside. for 5 minutes")
-    with open("/var/run/jardin/exterieur",a) as f:
-        f.write(datetime.datetime.now().isoformat(sep=" "))
-        data = {}
+    data = {}
     data["type"] = 'exterior'
     data["time"] =  datetime.datetime.now().isoformat()
     data['duration'] = duration
