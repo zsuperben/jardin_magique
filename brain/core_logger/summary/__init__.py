@@ -1,6 +1,7 @@
 from tornado_json import APIHandler, APIError
 import MySQLdb as mdb
 from MySQLdb.cursors import DictCursor
+from db import executeSQL
 import logging
 
 mylog = logging.getLogger("api")
@@ -12,7 +13,7 @@ class SummaryHandler(APIHandler):
         self.set_header("Content-Type", "application/json")
 
     def get(self, *args, **kwargs):
-        r=self.cur.execute("SELECT * FROM mesure_tbl_1 ORDER BY time DESC LIMIT 1")
+        r = executeSQL(self.cur, "SELECT * FROM mesure_tbl_1 ORDER BY time DESC LIMIT 1")
         d = None
         if r > 0:
             d = self.cur.fetchall()
