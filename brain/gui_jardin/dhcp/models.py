@@ -8,7 +8,7 @@ class Sensor(models.Model):
     This model is used to keep track of the configured sensors in the system
     """
     mac        = models.CharField(max_length=12)
-    ip         = models.IPAddressField()
+    ip         = models.GenericIPAddressField()
     
     pinA0      = models.ForeignKey(Plant, related_name="PinA0")
     pinA0.blank = True
@@ -66,24 +66,24 @@ class Config(models.Model):
 
 class Rpi(models.Model):
     
-    ip                 = models.IPAddressField()
+    ip                 = models.GenericIPAddressField()
     name               = models.CharField(max_length=50)
 
 class Netboot(models.Model):
     
-    server             = models.IPAddressField()
+    server             = models.GenericIPAddressField()
     filename           = models.CharField(max_length=50)
 
 class Networks(models.Model):
 
-    netaddr            = models.IPAddressField()
-    netmask            = models.IPAddressField()
+    netaddr            = models.GenericIPAddressField()
+    netmask            = models.GenericIPAddressField()
     
-    startip            = models.IPAddressField()
+    startip            = models.GenericIPAddressField()
     startip.null       =True
     startip.blank      =True
 
-    endip              = models.IPAddressField()
+    endip              = models.GenericIPAddressField()
     endip.null         = True
     endip.blank        = True
 
@@ -91,7 +91,7 @@ class Networks(models.Model):
     netboot.blank      = True
     netboot.null       = True
 
-    gateway            = models.IPAddressField()
+    gateway            = models.GenericIPAddressField()
     gateway.blank      = True
     gateway.null       = True
     

@@ -4,6 +4,11 @@ from MySQLdb.cursors import DictCursor
 import MySQLdb as mdb
 
 class IndexView(TemplateView):
+    def __init__(selfi, *args, **kwargs):
+        return super.__init__(*args, **kwargs)
+    
+    
+    
     def get_events(self):
         con = mdb.connect("localhost", "celery", "", "jardin")
         cur = con.cursor(DictCursor)
@@ -15,3 +20,12 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return render_to_response(request, template_name="index.html", dictionary={"title": "Welcome to the Djangle !", "events": self.get_events()} )
+
+    def post(self, *args, **kwargs):
+        pass
+
+    def put(self, *args, **kwargs):
+        pass
+
+    def delete(self, *args, **kwargs):
+        pass

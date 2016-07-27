@@ -62,7 +62,7 @@ ice comment
             try: 
                 rc = models.Config.objects.all()
                 style="all"
-            except AttributeError, DatabaseError as e:
+            except (AttributeError, DatabaseError) as e:
                 print("The get request on the DB seems to fail with a non-eexisting field somewhere : %s" % e )
  
         else:
@@ -70,16 +70,16 @@ ice comment
             try:
                 rc = models.Config.Objects.get(active=True)
                 style="active"
-            except AttributeError, DatabaseError as e:
+            except (AttributeError, DatabaseError) as e:
                 print("The get request on the DB seems to fail with a non-eexisting field somewhere : %s" % e )
             
-               render_to_response(ERROR_TEMPLATE, {"str":"The get request on the DB seems to fail with a non-eexisting field somewhere : %s" % e, "err":e })        
+                render_to_response(ERROR_TEMPLATE, {"str":"The get request on the DB seems to fail with a non-eexisting field somewhere : %s" % e, "err":e })        
                 return 255
         
         if style is "active":
-            render_to_response(CONFIG_TEMPLATE, {"style":"active","config":**rc})
+            render_to_response(CONFIG_TEMPLATE, {"style":"active","config":rc})
         elif style is "all":
-            render_to_response(CONFIG_TEMPLATE, {"style":"all", "config" : *rc })
+            render_to_response(CONFIG_TEMPLATE, {"style":"all", "config" : rc })
 
         
         return 1  # END of GET  function 

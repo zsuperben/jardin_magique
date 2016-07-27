@@ -22,12 +22,30 @@ SECRET_KEY = '#11ripgynoinwo46*ao3t5^g@1r1vgw7(xyvf2axlf9!1%sp9u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-TEMPLATE_STRING_IF_INVALID = "#MISSING OR INVALID DATA#"
+#TEMPLATE_DEBUG = True
+#TEMPLATE_STRING_IF_INVALID = "#MISSING OR INVALID DATA#"
 
     
 ALLOWED_HOSTS = ["127.0.0.1/32","192.168.0.0/16", '172.16.0.0/16', '10.0.0.0/8' ]
 
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'DEBUG': True,
+        'STRING_IF_INVALID': "TEMPLATE ERROR",
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # Application definition
 
@@ -78,22 +96,6 @@ DATABASES = {
         'PASSWORD':'sdrouf',
         'TEST_DEPENDENCIES': [],
     },
-    'core':{
-        'TEST_DEPENDENCIES': [],
-        'ENGINE': 'django.db.backends.mysql',
-         'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD':'sdrouf',
-       'NAME': 'jardin',
-        },
-    'datalogger': {
-        'TEST_DEPENDENCIES' : [],
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'jardin',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD':'sdrouf',
-        }
 }
 
 # Internationalization
