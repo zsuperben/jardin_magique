@@ -12,6 +12,6 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', datalogger.views.IndexView),
+    url(r'^$', datalogger.views.IndexView.as_view()),
     url(r'^dhcp/', include(dhcp.urls)),
     ]

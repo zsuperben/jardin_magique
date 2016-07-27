@@ -1,9 +1,17 @@
-{{ extends base.html }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="bozo.css"/>
+        <meta http-equiv="ContentType" type="text/html" />
+        <title>{{ title }}</title>
+        <!-- lol <script type="text/javascript" >function () { return }</script> -->
+    </head>
+
 <div>
     <p>Last events :</p>
     <table>
     {% for e in events %}
-        <tr><td>e.time</td><td>e.type</td></tr>
-    {% end for %}
+        <tr><td>{{e.time}}</td><td>{{e.type}}</td></tr>
+    {% endfor %}
     </table>
 </div>

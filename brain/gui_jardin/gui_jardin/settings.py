@@ -34,8 +34,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
-        'DEBUG': True,
-        'STRING_IF_INVALID': "TEMPLATE ERROR",
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -43,6 +41,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'debug': True,
+            'string_if_invalid': "error.html",
         },
     },
 ]
