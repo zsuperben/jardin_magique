@@ -44,13 +44,13 @@ app.conf.CELERYBEAT_SCHEDULE = {
     },
     "Switchiton": {
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=15, minute=0),
+        'schedule': crontab(hour=21, minute=0),
         'args': light
         
         },
     "thatOtherLightOn":{
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=15, minute=5),
+        'schedule': crontab(hour=21, minute=5),
         'args': olight,
     },    
     'TurnOffTheoLight': {
@@ -281,7 +281,7 @@ now = datetime.datetime.now()
 
 # Do we need light then ?
 want_lite = True
-if now.hour >= 9 and now.hour < 15:
+if now.hour >= 9 and now.hour < 21:
     want_lite = False
 
 # Do we have light already ?
@@ -289,10 +289,14 @@ have_light = False
 if bool(watering.readOne("SW5")) and bool(watering.readOne("SW7")):
     have_light = True
 
+
 # Turns the light on if needed
 if want_lite and not have_light:
     watering.turnOn("SW5")
     watering.turnOn("SW7")
+elif not want_lite and have_light:
+    lightOut.apply(["SW5", "SW7"])
+
 
 
 
