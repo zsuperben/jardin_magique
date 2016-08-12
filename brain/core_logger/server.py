@@ -58,16 +58,19 @@ if __name__ == "__main__":
     logger.info("Loading routes")
     toto = application.Application(
         [
+            #Backend arduino interface
             (r'/measure/', MeasureHandler, dict(Conf=Conf)),
             (r'/wateralert/', wateralert),
+            #Action control
             (r'/switch/(?P<swurl>SW\d)/', SwitchHandler),
             (r'/switch/', SwitchHandler),
-            (r'/video/', VideoHandler),
             (r'/arrosage/', ArrosageHandler),
             (r'/tomates/', TomatesHandler),
             (r'/remplir/', RemplissageHandler),
             (r'/carrottes/', CarrottesHandler),
+            #Frontend reports
             (r'/doc/', DocHandler),
+            (r'/video/', VideoHandler),
         ],
         {}
     )

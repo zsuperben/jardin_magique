@@ -5,12 +5,12 @@ from config import load_config
 
 _alertsConf = None
 logger = logging.getLogger('api')
-init()
 
 def init():
     global _alertsConf
     _alertsConf = load_config()['alerts']
 
+init()
 def alert(msg):
     if _alertsConf['mail'] == 'yes':
         try:

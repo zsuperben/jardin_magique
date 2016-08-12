@@ -5,6 +5,10 @@ import logging
 
 logger = logging.getLogger('api')
 
+def get_cursor():
+    return get_conenction().cursor()
+
+
 def executeSQL(cursor, statement):
     try:
         return cursor.execute(statement)
@@ -80,13 +84,26 @@ def insert_dict_into_db(connection, table, data):
     r = executeSQL(mycur, gogetit)
     connection.commit()
 
-def get_last(connection, thing):
+def get_last(connection, thing=None, limit=None, *args, **kwargs):
     if type(connection) is not MySQLdb.connections.Connection or type(thing) is not str:
         raise ValueError("Wrong arguments supplied.")
     mycur = connection.cursor(MySQLdb.cursors.DictCursor)
-    if thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
+    if thing is not None and thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
         raise ValueError("type not supported yet")
-    ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
+
+    if thing is not None:
+
+        if not limit: 
+            ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
+        else:
+            ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" LIMIT %d; " % (thing, limit))
+
+    else:
+        if not limit:
+            ret = executeSQL(mycur, "SELECT * FROM events");
+        else:
+            ret = executeSQL(mycur, "SELECT * FROM events LIMIT %d" % limit);
+
     if ret > 0:
         return mycur.fetchall()
     else:
@@ -105,3 +122,24 @@ def get_duration(name):
         return cur.fetchone()[0]
     else:
         return None
+
+
+def get_measures():
+    cur = get_cursor()
+    r = executeSQL(cur,"SHOW TABLES LIKE 'mesure_tbl_%'")
+    my_values = []
+    if r > 0:
+        tables = cur.fetchall()
+        #print("Tables contains : %s and is type %s" % (tables, type(tables)))
+        for t in tables:
+            tmp_list = []
+            print(t.values())
+            r = cur.execute("SELECT * FROM %s ORDER BY TIME DESC LIMIT 10 "%t.values()[0] )
+            if r > 0:
+                tmp = cur.fetchall()
+                for v in tmp:
+                    tmp_list.append(v)
+                my_values.append(tmp_list)
+
+    return my_values
+

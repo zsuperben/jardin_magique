@@ -1,17 +1,42 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="bozo.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/bozo.css"/>
+        <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
         <meta http-equiv="ContentType" type="text/html" />
         <title>{{ title }}</title>
         <!-- lol <script type="text/javascript" >function () { return }</script> -->
     </head>
 
-<div>
-    <p>Last events :</p>
+<div class="imgDiv">
+    <p>An image of the garden</p>
+    <img alt="Borken B64" src="data:image/png;base64,{{ image }}" />
+</div>
+<div class="tableDiv" id="lastfail">
+    <p>Last failures from celery :</p>
     <table>
-    {% for e in events %}
-        <tr><td>{{e.time}}</td><td>{{e.type}}</td></tr>
+    <tr><th>Date</th><th>Task Name</th><th>Exception text</th></tr>
+    {% for t in tasks %}
+        <tr><td>{{ t.time }}</td><td>{{t.name}}</td><td>{{ t.exception }}</td></tr>
     {% endfor %}
     </table>
 </div>
+<div class="tableDiv" id="lastevent">
+    <p>Last events :</p>
+    <table>
+    <tr><th>Date</th><th>Event</th></tr>
+    {% for e in events %}
+        <tr><td class="datetd">{{e.time}}</td><td class="typetd">{{e.type}}</td></tr>
+    {% endfor %}
+    </table>
+</div>
+<div class="tableDiv" id="measuresDiv">
+    <p>Last measures</p>
+    <table>
+    <tr><th>Date</th><th>Plant</th><th>Soil</th><th>Temp</th></tr>
+    {% for m in measures%}
+        <tr><td>{{ m.time }}</td><td>{{ m.plant }}</td><td>{{ m.soil }}</td><td>{{ m.temp }}</td></tr>
+    {% endfor %}
+</div>
+</html>

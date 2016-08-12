@@ -10,7 +10,7 @@ from db import insert_dict_into_db, get_connection, get_duration, executeSQL
 import MySQLdb
 
 import alerter
-
+from videohandler import take_picture
 
 #Setup Logger, to be moved in the configuration section:
 celerylogger = logging.getLogger('celery')
@@ -132,6 +132,10 @@ def CheckForAction():
             waterIsNeeded = True
             celerylogger.warning("Water is needed in zone : '%s' average is %d" % (avg))
 
+@app.task(base=CallbackTask)
+def video_surveillance():
+    logging.info("New automatic picture taken.")
+    take_picture()
 
 
 def CalculAvg():
