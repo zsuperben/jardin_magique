@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger('api')
 
 def get_cursor():
-    return get_conenction().cursor()
+    return get_connection().cursor()
 
 
 def executeSQL(cursor, statement):
@@ -85,7 +85,7 @@ def insert_dict_into_db(connection, table, data):
     connection.commit()
 
 def get_last(connection, thing=None, limit=None, *args, **kwargs):
-    if type(connection) is not MySQLdb.connections.Connection or type(thing) is not str:
+    if type(connection) is not MySQLdb.connections.Connection or ( type(thing) is not str and thing is not "" ):
         raise ValueError("Wrong arguments supplied.")
     mycur = connection.cursor(MySQLdb.cursors.DictCursor)
     if thing is not None and thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
@@ -133,8 +133,8 @@ def get_measures():
         #print("Tables contains : %s and is type %s" % (tables, type(tables)))
         for t in tables:
             tmp_list = []
-            print(t.values())
-            r = cur.execute("SELECT * FROM %s ORDER BY TIME DESC LIMIT 10 "%t.values()[0] )
+            print(t)
+            r = cur.execute("SELECT * FROM %s ORDER BY TIME DESC LIMIT 10 "%t[0] )
             if r > 0:
                 tmp = cur.fetchall()
                 for v in tmp:

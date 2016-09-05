@@ -37,20 +37,20 @@ olight = []
 olight.append("SW5")
 
 app.conf.CELERYBEAT_SCHEDULE = {
-    'TurnOffTheLight': {
-        'task': 'tasks.lightOut',
-        'schedule': crontab(hour=9, minute=0),
-        'args': light
-    },
-    "Switchiton": {
-        'task': 'tasks.lightUp',
-        'schedule': crontab(hour=21, minute=0),
-        'args': light
-        
-        },
+#    'TurnOffTheLight': {
+#        'task': 'tasks.lightOut',
+#        'schedule': crontab(hour=9, minute=0),
+#        'args': light
+#    },
+#    "Switchiton": {
+#        'task': 'tasks.lightUp',
+#        'schedule': crontab(hour=21, minute=0),
+#        'args': light
+#        
+#        },
     "thatOtherLightOn":{
         'task': 'tasks.lightUp',
-        'schedule': crontab(hour=21, minute=5),
+        'schedule': crontab(hour=14, minute=5),
         'args': olight,
     },    
     'TurnOffTheoLight': {
@@ -283,7 +283,7 @@ now = datetime.datetime.now()
 
 # Do we need light then ?
 want_lite = True
-if now.hour >= 9 and now.hour < 21:
+if now.hour >= 9 and now.hour < 14:
     want_lite = False
 
 # Do we have light already ?
@@ -295,7 +295,7 @@ if bool(watering.readOne("SW5")) and bool(watering.readOne("SW7")):
 # Turns the light on if needed
 if want_lite and not have_light:
     watering.turnOn("SW5")
-    watering.turnOn("SW7")
+#    watering.turnOn("SW7")
 elif not want_lite and have_light:
     lightOut.apply(["SW5", "SW7"])
 

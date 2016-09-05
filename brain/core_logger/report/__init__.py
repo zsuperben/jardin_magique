@@ -1,4 +1,4 @@
-from tornado_json import APIHandler, APIError
+from tornado_json.requesthandlers import APIHandler, APIError
 from db import *
 from videohandler import get_latest_pic
 
@@ -9,4 +9,4 @@ class ReportHandler(APIHandler):
         bob['measures'] = get_measures()
         bob['events'] = get_last(get_connection(), thing=None, limit=20)
         bob['img'] = get_latest_pic()
-        self.write()
+        self.write(bob)

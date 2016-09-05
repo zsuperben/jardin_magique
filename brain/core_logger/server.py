@@ -1,3 +1,5 @@
+Conf = None
+
 import sys
 import getopt
 from tornado import ioloop
@@ -17,6 +19,8 @@ from fillup import RemplissageHandler
 from sys import path
 from os.path import realpath, dirname
 from dochandler import DocHandler
+from report import ReportHandler
+
 path.append(realpath(dirname(__file__)))
 import alerter
 #TODO add logging configuration to config module
@@ -71,6 +75,7 @@ if __name__ == "__main__":
             #Frontend reports
             (r'/doc/', DocHandler),
             (r'/video/', VideoHandler),
+            (r'/report/', ReportHandler),
         ],
         {}
     )
