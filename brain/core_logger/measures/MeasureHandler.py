@@ -6,7 +6,7 @@ from tornado_json import schema
 import json
 import datetime
 from  netaddr import IPNetwork
-from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone, get_connection
+from db import insert_dict_into_db, get_table_for_zone, set_table_for_zone, get_connection, get_last, get_cuve
 
 from config import is_allowed
 import logging
@@ -53,31 +53,36 @@ class MeasureHandler(APIHandler):
     def on_finish(self):
         self.dbc.close()
 
+def now():
+    return datetime.datetime.now().isoformat()
 
-lastmail = datetime.datetime.now() - datetime.timedelta(days=1)
-etat = 'Unknown'
 class wateralert(APIHandler):
     def get(self):
-        self.write({'lastmail': lastmail,'etat': etat })
-
+        cc = get_connection()
+        try:
+            lastmail = get_last(cc,thing="mail" )
+        except (AttributeError, NameError) as bob:
+            lastmail = 0
+            logger.error(bob)
+        self.write({'lastmail': lastmail,'etat': '%d%%' % get_cuve(cc, "cuve") })
+        cc.close()
     def post(self):
         # todo lire JSON
-        global lastmail, etat
-        oldstate = etat
-
         try:
             data = json.loads(self.request.body.decode("utf-8"))
             logger.warning(self.request.body.decode("utf-8"))
-            etat = data['etat']
-        
-            if etat != oldstate or datetime.datetime.now() - lastmail > datetime.timedelta(days=1):
-                s = "l'eau est %s" % "pleine" if etat else "pas pleine" 
+            etat = data['cuve']
+            cc = get_connection()
+            insert_dict_into_db(cc, "cuve", {"time":now(), "value": etat})  
+            if etat < 31:
+                s = "l'eau est a %d%%" % etat 
                 alerter.alert(s)
                 logger.error("mail envoye : %s" % s )
-                lastmail = datetime.datetime.now()
+                insert_dict_into_db(cc, "events", {'time': now(), 'type': 'mail', 'duration': 0})
             else:
-                logger.warning("l'eau est %s" % "pleine" if etat else "pas pleine")
+                logger.warning("l'eau est %d%%" % etat)
         except Exception as e:
             logger.error("Shit happens : %s" % e)
             raise APIError(500)
-
+        finally:
+            cc.close()

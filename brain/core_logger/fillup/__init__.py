@@ -3,7 +3,9 @@ from tasks import remplissage_cuve
 from watering import switches, turnOn, turnOff
 from os.path import isfile
 from db import get_connection, get_last
+import logging 
 
+log = logging.getLogger(name='api') 
 
 class RemplissageHandler(APIHandler):
 
@@ -12,15 +14,8 @@ class RemplissageHandler(APIHandler):
         self.set_header("Content-Type", "application/json")
         data['code'] = 200
         data['status'] = 'OK'
-        try:
-            for line in f:
-                pass
-            if line == '':
-                line = 'unknown-blanck'
-            data['last'] = unicode(line)
-        except IOError:
-            con = get_connection()
-            data['last'] = get_last(con, "remplir")
+        con = get_connection()
+        data['last'] = get_last(con, "remplir")
         self.write(data)
 
 
@@ -31,4 +26,5 @@ class RemplissageHandler(APIHandler):
         data['status'] = 'OK'
         data['duration'] = 30
         remplissage_cuve.apply_async([], countdowon=1)
+        log.warning("Remplissage cuve")
         self.write(data)
