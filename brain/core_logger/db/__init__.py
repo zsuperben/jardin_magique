@@ -2,6 +2,8 @@ __author__ = 'zsb'
 import MySQLdb
 import MySQLdb.cursors
 import logging
+from pymongo import MongoClient
+
 
 logger = logging.getLogger('api')
 
@@ -12,9 +14,9 @@ def get_cursor():
 def executeSQL(cursor, statement):
     try:
         return cursor.execute(statement)
-    except Exception:
-        logger.error('SQL FAILED: ' + statement)
-        raise
+    except Exception as err:
+        logger.error('SQL FAILED: ' + statement + "Error was : " + str(err))
+        raise err
 
 def get_table_for_zone(con, zone):
     if type(con) is not MySQLdb.connections.Connection or type(zone) is not str:
@@ -162,4 +164,13 @@ def get_measures():
                 my_values.append(tmp_list)
 
     return my_values
+
+
+
+def getMongo():
+    try:
+        c = MongoClient("mongodb://localhost:27017")
+    except Exception as err:
+        logger.error("Can't get connection : " + str(err))
+        raise err
 
