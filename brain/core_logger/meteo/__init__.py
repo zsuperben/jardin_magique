@@ -17,12 +17,14 @@ class meteoHandler(APIHandler):
             pluie = 0 
             m = requests.get("http://api.openweathermap.org/forecast?q=cahan,fr&appid=%s&units=metric&lang=fr" % APPID )
             if m.status_code == 200:
+                print(m.content.decode())
                 d = json.loads(m.content.decode())
                 logger.notice(d)
                 for prev in d['list']:
                     if 'rain' in prev.keys():
                         pluie = pluie + prev['rain']['3h']
-
+            else:
+                print("Got some issues getting the thing : status %d" % m.status_code)
             self.write({"pluie": pluie})
         except Exception as e:
             logger.error(e)
