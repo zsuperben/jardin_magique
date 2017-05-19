@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather layer</title>
+  <style>
+    html, body{
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map{
+      width: 400px;
+      height: 300px;
+    }
+
+  </style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+   integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+   crossorigin=""/>
+<link rel="stylesheet" href"leaflet_owm.css">
+<script src="leaflet.js"></script>
+<script src="leaflet_OWM.js"></script>
+  
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 18, attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+
+var clouds = L.OWM.precipitation({ showLegend: true, opacity: 0.5, appId: 'd70b47c0b3a4d2bc343df3973dee2ed0'});
+var city = L.OWM.current({intervall: 15, lang: 'de'});
+
+var map = L.map('map', { center: new L.LatLng(48.877338, -0.483815), zoom: 10, layers: [osm]})
+var baseMaps = { "OSM Standard": osm };
+var overlayMaps = { "Clouds": clouds, "Cities": city };
+map.addLayer(clouds);
+var marker = L.marker([48.877338, -0.483815]).addTo(map);
+marker.bindPopup("<b>Jardin !</b>").openPopup();
+</script>
+
+
+</body>
+</html>
