@@ -15,7 +15,7 @@ class meteoHandler(APIHandler):
     def get(self):
         try:
             pluie = 0 
-            m = requests.get("http://api.openweathermap.org/forecast?q=cahan,fr&appid=%s&units=metric&lang=fr" % APPID )
+            m = requests.get("http://api.openweathermap.org/data/2.5/forecast?q=cahan,fr&appid=d70b47c0b3a4d2bc343df3973dee2ed0&units=metric&lang=fr")
             if m.status_code == 200:
                 print(m.content.decode())
                 d = json.loads(m.content.decode())
