@@ -5,11 +5,18 @@ import MySQLdb as mdb
 from gui_jardin.settings import DATABASES 
 from base64 import b64encode
 import datetime
+import os
+PICDIR = "/home/pi/jardin_magique/brain/core_logger/"
 
 def get_image():
     try: 
-        #list current avalaible photos
-        fh  = open('/home/pi/jardin_magique/brain/core_logger/2016_07_26_19_02.png', 'r')
+        #TODO:list current avalaible photos
+        png_files = [ f for f in os.listdir(PICDIR) if f.endswith(".png")]
+
+        png_files.sort(key=lambda x: os.path.getmtime(x))        
+
+        fh  = open(os.path.join(PICDIR, png_files[-1]),'r')
+
         data = fh.read()
     except:
         return None
@@ -51,10 +58,11 @@ class IndexView(TemplateView):
         my_values = []
         if r > 0:
             tables = cur.fetchall()
-            #print("Tables contains : %s and is type %s" % (tables, type(tables)))
+            print("Tables contains : %s and is type %s" % (tables, type(tables)))
             for t in tables:
-                print(t.values())
-                r = cur.execute("SELECT * FROM %s ORDER BY TIME DESC LIMIT 10 "%t.values()[0] )
+                t = list(t.values())
+                print(t)
+                r = cur.execute("SELECT * FROM %s ORDER BY TIME DESC LIMIT 10 "%t[0] )
                 if r > 0:
                     tmp = cur.fetchall()
                     for v in tmp:

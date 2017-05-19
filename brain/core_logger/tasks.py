@@ -6,7 +6,7 @@ import datetime
 from celery.schedules import crontab
 import logging
 
-from db import insert_dict_into_db, get_connection, get_duration, executeSQL
+from db import insert_dict_into_db, get_connection, get_duration, executeSQL, get_cuve
 import MySQLdb
 
 import alerter
@@ -48,42 +48,42 @@ app.conf.CELERYBEAT_SCHEDULE = {
 #        'args': light
 #        
 #        },
-    "thatOtherLightOn":{
-        'task': 'tasks.lightUp',
-        'schedule': crontab(hour=14, minute=5),
-        'args': olight,
-    },    
-    'TurnOffTheoLight': {
-        'task': 'tasks.lightOut',
-        'schedule': crontab(hour=9, minute=0),
-        'args': olight
-    },
-    'moveAirAround': {
-        'task': 'tasks.ventilation',
-        'schedule': crontab(minute=30),
-        'args': (),
-    },
-    'PutWaterOnSeeds': {
-        'task': 'tasks.arrosage',
-        'schedule': crontab(hour='5', minute=5),
-        'args': (),
-    },
-    'fillup_tank': {
-        'task': 'tasks.remplissage_cuve', 
-        'schedule': crontab(hour=0, minute=5, day_of_week=5), 
-        'args': (),
-        },
-    'totoes':{
-        'task': 'tasks.tomates',
-        'schedule': crontab(hour=8, minute=6),
-        'args': (),
-        },
-    "CheckMesure": {
-        'task': 'tasks.check_mesure',
-        'schedule': crontab(minute='*/15'),
-        'args': ()
-        },
- 
+#    "thatOtherLightOn":{
+#        'task': 'tasks.lightUp',
+#        'schedule': crontab(hour=14, minute=5),
+#        'args': olight,
+#    },    
+#    'TurnOffTheoLight': {
+#        'task': 'tasks.lightOut',
+#        'schedule': crontab(hour=9, minute=0),
+#        'args': olight
+#    },
+#    'moveAirAround': {
+#        'task': 'tasks.ventilation',
+#        'schedule': crontab(minute=30),
+#        'args': (),
+#    },
+#    'PutWaterOnSeeds': {
+#        'task': 'tasks.arrosage',
+#        'schedule': crontab(hour='5', minute=5),
+#        'args': (),
+#    },
+#    'fillup_tank': {
+#        'task': 'tasks.remplissage_cuve', 
+#        'schedule': crontab(hour=0, minute=5, day_of_week=5), 
+#        'args': (),
+#        },
+#    'totoes':{
+#        'task': 'tasks.tomates',
+#        'schedule': crontab(hour=8, minute=6),
+#        'args': (),
+#        },
+#    "CheckMesure": {
+#        'task': 'tasks.check_mesure',
+#        'schedule': crontab(minute='*/15'),
+#        'args': ()
+#        },
+# 
 }
 
 
@@ -210,18 +210,19 @@ def remplissage_cuve():
 
 @app.task(base=CallbackTask)
 def tomates():
-    duration = get_duration("tomates")
-    celerylogger.warning("Watering tomatoes")
-    data = {}
-    data["type"] = "tomates"
-    data["time"] =  datetime.datetime.now().isoformat()
-    data['duration'] = duration
-    connection = get_connection()
-    insert_dict_into_db(connection, "events", data)
-    connection.close()
-    watering.turnOn("SW3")
-    watering.turnOn("SW8")
-    lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=duration)
+    if get_cuve() > 0:
+        duration = get_duration("tomates")
+        celerylogger.warning("Watering tomatoes")
+        data = {}
+        data["type"] = "tomates"
+        data["time"] =  datetime.datetime.now().isoformat()
+        data['duration'] = duration
+        connection = get_connection()
+        insert_dict_into_db(connection, "events", data)
+        connection.close()
+        watering.turnOn("SW3")
+        watering.turnOn("SW8")
+        lightOut.apply_async( [ ["SW8", "SW3"] ], countdown=duration)
 
 @app.task(base=CallbackTask)
 def ext_arrosage():
@@ -294,8 +295,9 @@ if bool(watering.readOne("SW5")) and bool(watering.readOne("SW7")):
 
 # Turns the light on if needed
 if want_lite and not have_light:
-    watering.turnOn("SW5")
+#    watering.turnOn("SW5")
 #    watering.turnOn("SW7")
+     print('would have litten up')
 elif not want_lite and have_light:
     lightOut.apply(["SW5", "SW7"])
 

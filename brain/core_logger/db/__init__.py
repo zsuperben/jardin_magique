@@ -84,19 +84,19 @@ def insert_dict_into_db(connection, table, data):
     r = executeSQL(mycur, gogetit)
     connection.commit()
 
-def get_last(connection, thing=None, limit=None, *args, **kwargs):
+def get_last(connection, thing=None, limit=1, *args, **kwargs):
     if type(connection) is not MySQLdb.connections.Connection or ( type(thing) is not str and thing is not "" ):
         raise ValueError("Wrong arguments supplied.")
     mycur = connection.cursor(MySQLdb.cursors.DictCursor)
-    if thing is not None and thing not in ["tomates", "seeds","remplissage_cuve", "exterior" ]:
+    if thing is not None and thing not in ["tomates", "seeds","remplissage_cuve", "exterior", "cuve", "mail" ]:
         raise ValueError("type not supported yet")
 
     if thing is not None:
 
         if not limit: 
-            ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" ; " % thing)
+            ret = executeSQL(mycur, "SELECT `time` FROM events WHERE `type`=\"%s\" ORDER BY `time` DESC; " % thing)
         else:
-            ret = executeSQL(mycur, "SELECT * FROM events WHERE `type`=\"%s\" LIMIT %d; " % (thing, limit))
+            ret = executeSQL(mycur, "SELECT `time` FROM events WHERE `type`=\"%s\" ORDER BY `time` DESC LIMIT %d ; " % (thing, limit))
 
     else:
         if not limit:
@@ -105,9 +105,29 @@ def get_last(connection, thing=None, limit=None, *args, **kwargs):
             ret = executeSQL(mycur, "SELECT * FROM events LIMIT %d" % limit);
 
     if ret > 0:
-        return mycur.fetchall()
+        results = mycur.fetchall()
+        print(results)
+        try:
+            for r in results:
+                r['time'] = r['time'].isoformat()
+            if limit == 1:
+                return results[0]
+            else:
+                return results
+        except NameError:
+            logger.error("No Time here bob")
+            return None
     else:
         return None
+def get_cuve(connection, *args, **kwargs):
+    mycur = connection.cursor()
+    ret = executeSQL(mycur, "SELECT value FROM cuve ORDER BY time DESC LIMIT 1;")
+    res =  mycur.fetchone()[0]
+    print(res)
+    if ret == 1:
+        return res
+    else:
+        return 0
 
 def get_connection():
     return MySQLdb.connect("localhost", "celery", "ffsomg2016", "jardin")

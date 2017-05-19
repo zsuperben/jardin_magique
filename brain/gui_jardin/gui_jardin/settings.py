@@ -26,7 +26,7 @@ DEBUG = True
 #TEMPLATE_STRING_IF_INVALID = "#MISSING OR INVALID DATA#"
 
     
-ALLOWED_HOSTS = ["127.0.0.1/32","192.168.0.0/16", '172.16.0.0/16', '10.0.0.0/8' ]
+ALLOWED_HOSTS = ["127.0.0.1/32","192.168.0.0/16", '172.16.0.0/16', '10.0.0.0/8', '192.168.0.201' ]
 
 
 TEMPLATES = [
@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'datalogger',
     'core',
     'celery',

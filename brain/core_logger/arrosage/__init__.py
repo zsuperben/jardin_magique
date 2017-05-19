@@ -1,5 +1,5 @@
 from tornado_json.requesthandlers import APIHandler, APIError
-from tasks import arrosage, tomates 
+from tasks import arrosage, tomates,  ext_arrosage 
 from watering import switches, turnOn, turnOff
 from db import get_last, get_connection
 import MySQLdb
@@ -60,7 +60,7 @@ class CarrottesHandler(APIHandler):
         data['code'] = 200
         data['status'] = "ok"
         con = get_connection()
-        data['last'] = get_last(con, "exterior")
+        data['last'] = get_last(con, thing="exterior", limit=1)
         con.close()
         self.write(data)
 
@@ -72,6 +72,7 @@ class CarrottesHandler(APIHandler):
             data['status'] ="OK"
             data["duration"] = 120
             r = ext_arrosage.apply_async([], countdown=1 )
+            mylogger.warning("Arrosage Carrottes")
         except err:
             data['code'] = 500
             data['status'] = "Failure"

@@ -19,7 +19,7 @@ def alert(msg):
             logger.error('Failed to send alert mail: %s' % e)
 
 def sendMail(msg):
-    msg = MIMEText('Le jardin magique est dans les choux: ' + msg)
+    msg = MIMEText('Un probleme est survenu dans le jardin: ' + msg)
     msg['Subject'] = 'Alerte du jardin magique'
     msg['From'] = _alertsConf['from']
     msg['To'] = ', '.join(_alertsConf['to'])
