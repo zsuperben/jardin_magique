@@ -20,6 +20,7 @@ from sys import path
 from os.path import realpath, dirname
 from dochandler import DocHandler
 from report import ReportHandler
+from meteo import meteoHandler
 
 path.append(realpath(dirname(__file__)))
 import alerter
@@ -76,6 +77,7 @@ if __name__ == "__main__":
             (r'/doc/', DocHandler),
             (r'/video/', VideoHandler),
             (r'/report/', ReportHandler),
+            (r'/meteo/', meteoHandler),
         ],
         {}
     )
