@@ -27,5 +27,5 @@ requests==2.4.3
 sense-hat==2.1.0
 six==1.8.0
 tornado==4.3
-urllib3==1.9.1
+urllib3==1.25.3
 wheel==0.24.0
